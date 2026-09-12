@@ -34,6 +34,7 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const invite = params.get('invite');
     const role = params.get('role');
+    const view = params.get('view');
 
     if (invite) {
       setInviteCodeFromUrl(invite);
@@ -42,6 +43,12 @@ export default function App() {
     } else if (role && ['buyer', 'supplier', 'driver'].includes(role)) {
       setRegisterInitialRole(role);
       setCurrentView('register');
+    } else if (view && ['home', 'register', 'supplier-portal', 'driver-cockpit'].includes(view)) {
+      setCurrentView(view);
+    } else if (view === 'supplier') {
+      setCurrentView('supplier-portal');
+    } else if (view === 'driver') {
+      setCurrentView('driver-cockpit');
     }
   }, []);
 
