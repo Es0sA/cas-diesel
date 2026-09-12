@@ -1,219 +1,335 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
 import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
-import BuyerDischargeSetup from './components/BuyerDischargeSetup';
+import RegisterPage from './components/RegisterPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
-import { ShieldCheck, Lock, Truck, HelpCircle, CheckCircle2, ChevronDown } from 'lucide-react';
+import { 
+  Building2, 
+  UserCheck, 
+  Truck, 
+  ShieldCheck, 
+  Lock, 
+  ArrowRight, 
+  KeyRound, 
+  CheckCircle2, 
+  HelpCircle,
+  MapPin
+} from 'lucide-react';
 
 export default function App() {
-  const [activeView, setActiveView] = useState('portal'); // 'portal', 'buyer', 'supplier', 'driver'
-  const [activeLegalModal, setActiveLegalModal] = useState(null); // 'terms', 'privacy', 'refund', 'cookies' or null
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'supplier-portal', 'driver-cockpit'
+  const [registerInitialRole, setRegisterInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
+  const [inviteCodeFromUrl, setInviteCodeFromUrl] = useState('');
+  const [activeLegalModal, setActiveLegalModal] = useState(null);
+
+  // Check URL query parameters for direct driver invite links (e.g. ?invite=MAT-8849)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const invite = params.get('invite');
+    const role = params.get('role');
+
+    if (invite) {
+      setInviteCodeFromUrl(invite);
+      setRegisterInitialRole('driver');
+      setCurrentView('register');
+    } else if (role && ['buyer', 'supplier', 'driver'].includes(role)) {
+      setRegisterInitialRole(role);
+      setCurrentView('register');
+    }
+  }, []);
+
+  const handleOpenRegistration = (role = 'buyer') => {
+    setRegisterInitialRole(role);
+    setCurrentView('register');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleSelectSupplierForEscrow = (supplier) => {
-    setActiveView('portal');
-    // Smooth scroll to the Escrow Simulator
+    setCurrentView('home');
     const sim = document.getElementById('escrow-simulator');
     if (sim) {
       sim.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const handleExploreMarketplace = () => {
-    const market = document.getElementById('marketplace');
-    if (market) {
-      market.scrollIntoView({ behavior: 'smooth' });
+  const handleRegistrationSuccess = (role) => {
+    if (role === 'supplier') {
+      setCurrentView('supplier-portal');
+    } else if (role === 'driver') {
+      setCurrentView('driver-cockpit');
+    } else {
+      setCurrentView('home');
     }
-  };
-
-  const handleExploreSimulator = () => {
-    const sim = document.getElementById('escrow-simulator');
-    if (sim) {
-      sim.scrollIntoView({ behavior: 'smooth' });
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-cas-canvas text-cas-slate">
-      {/* Universal Header with Persona View Switcher */}
+      {/* Top Header */}
       <Header 
-        activeView={activeView} 
-        setActiveView={setActiveView} 
-        onOpenLegalModal={(modal) => setActiveLegalModal(modal)} 
+        currentView={currentView}
+        onNavigate={(view) => {
+          setCurrentView(view);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenLegalModal={(modal) => setActiveLegalModal(modal)}
       />
 
-      {/* Live Depot Spot Ticker (Visible Across Portal) */}
+      {/* Live Depot Spot Ticker */}
       <DepotTicker />
 
-      {/* Main Content Area Based on Active Perspective */}
+      {/* Main Body */}
       <main className="flex-1">
-        {activeView === 'portal' && (
+        {/* VIEW 1: REGISTRATION PAGE */}
+        {currentView === 'register' && (
+          <RegisterPage 
+            initialRole={registerInitialRole}
+            inviteCodeParam={inviteCodeFromUrl}
+            onBackToHome={() => {
+              setCurrentView('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onRegistrationSuccess={handleRegistrationSuccess}
+          />
+        )}
+
+        {/* VIEW 2: SUPPLIER OPERATIONS DESK */}
+        {currentView === 'supplier-portal' && (
+          <SupplierPortal 
+            onNavigateToDriverDemo={() => {
+              setCurrentView('driver-cockpit');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
+        {/* VIEW 3: DRIVER COCKPIT */}
+        {currentView === 'driver-cockpit' && (
+          <DriverCockpit />
+        )}
+
+        {/* VIEW 4: HOMEPAGE (WHAT WE DO + THREE ROLES + ESCROW TERMINAL + MARKETPLACE) */}
+        {currentView === 'home' && (
           <>
-            {/* 1. Hero Section with Generous White Space */}
+            {/* Hero Section */}
             <Hero 
-              onExploreMarketplace={handleExploreMarketplace}
-              onExploreSimulator={handleExploreSimulator}
+              onExploreMarketplace={() => {
+                const market = document.getElementById('marketplace');
+                if (market) market.scrollIntoView({ behavior: 'smooth' });
+              }}
+              onExploreSimulator={() => {
+                const sim = document.getElementById('escrow-simulator');
+                if (sim) sim.scrollIntoView({ behavior: 'smooth' });
+              }}
             />
 
-            {/* 2. Signature Element: The Geofence Escrow Terminal */}
-            <EscrowTerminal />
-
-            {/* 3. Live Supplier Directory & Depot Comparison */}
-            <Marketplace 
-              onSelectSupplierForEscrow={handleSelectSupplierForEscrow}
-            />
-
-            {/* 4. Trust & Dual Protection Comparison Section */}
-            <section className="bg-white py-12 md:py-20 border-b border-cas-border">
+            {/* WHAT WE DO & ROLE BREAKDOWN SECTION */}
+            <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
               <div className="max-w-7xl mx-auto px-4 sm:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-12">
+                <div className="text-center max-w-3xl mx-auto mb-14">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
                     <ShieldCheck className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-                    <span>Fiduciary Architecture</span>
+                    <span>How CAS Energy Operates</span>
                   </div>
                   <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-                    How CAS Escrow Protects Both Sides
+                    What We Do Across The Downstream Chain
                   </h2>
                   <p className="text-base sm:text-lg text-cas-muted mt-2">
-                    In high-value petroleum logistics, uncertainty damages commerce. CAS Energy eliminates risk for both corporate purchasers and licensed marketers.
+                    We eliminate middlemen markups and delivery uncertainty by connecting corporate facilities directly with loading terminals through an escrow-backed logistics network.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                  {/* Buyer Protection Column */}
-                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border-2 border-cas-blue text-cas-blue mb-6 shadow-sm">
-                      <Lock className="w-6 h-6" aria-hidden="true" />
+                {/* 3 Role Cards with Clear Action Paths */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  
+                  {/* Card 1: For Buyers */}
+                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col justify-between hover:border-cas-blue transition-colors">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-sky-100 text-cas-blue flex items-center justify-center mb-6">
+                        <Building2 className="w-6 h-6" aria-hidden="true" />
+                      </div>
+                      <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Corporate Buyers</h3>
+                      <p className="text-sm text-cas-muted leading-relaxed mb-6">
+                        Procurement managers choose suppliers by price and depot location. Funds are held in escrow. During registration, you map your exact GPS discharge gate so trucks never get lost.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-extrabold text-cas-slate mb-4">Protection For Corporate Buyers</h3>
-                    <ul className="space-y-3.5 text-sm text-cas-muted">
-                      <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Zero Premature Debits:</strong> Payment stays safely locked in escrow until the tanker crosses into your facility gate perimeter.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Quality Rejection Guarantee:</strong> If the on-site hydrometer density or flash point test fails, product is rejected and 100% of escrow is returned.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Calibrated Meter Verification:</strong> Every tanker is metered with certified digital tickets so you never pay for short volumes.</span>
-                      </li>
-                    </ul>
+
+                    <div>
+                      <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
+                          <span>Direct refinery & depot spot rates</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
+                          <span>100% money-back quality guarantee</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenRegistration('buyer')}
+                        className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+                      >
+                        <span>Register As A Buyer</span>
+                        <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Marketer Protection Column */}
-                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border-2 border-cas-amber text-cas-amberDark mb-6 shadow-sm">
-                      <Truck className="w-6 h-6" aria-hidden="true" />
+                  {/* Card 2: For Marketers */}
+                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col justify-between hover:border-cas-amber transition-colors">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-amber-100 text-cas-amberDark flex items-center justify-center mb-6">
+                        <UserCheck className="w-6 h-6" aria-hidden="true" />
+                      </div>
+                      <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Licensed Marketers</h3>
+                      <p className="text-sm text-cas-muted leading-relaxed mb-6">
+                        Publish your own spot price per litre and available volumes. Once your truck departs the gantry, the order is non-cancellable, protecting your capital. You invite and authorize drivers directly.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-extrabold text-cas-slate mb-4">Protection For Licensed Marketers</h3>
-                    <ul className="space-y-3.5 text-sm text-cas-muted">
-                      <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Guaranteed Funds Upfront:</strong> Never dispatch a 40-million Naira fuel tanker on credit or uncertain payment promises.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Non-Cancellable Route Lock:</strong> The moment your loaded truck departs the depot gate, the buyer cannot cancel the order while product is in transit.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Automated Instant Settlement:</strong> Once the receiving officer confirms discharge inside the geofenced perimeter, funds are transferred within sixty seconds.</span>
-                      </li>
-                    </ul>
+
+                    <div>
+                      <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
+                          <span>Guaranteed escrow before truck departs</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
+                          <span>Generate one-time driver invite links</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenRegistration('supplier')}
+                        className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+                      >
+                        <span>Register As A Marketer</span>
+                        <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Card 3: For Drivers */}
+                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col justify-between hover:border-cas-green transition-colors">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-emerald-100 text-cas-green flex items-center justify-center mb-6">
+                        <Truck className="w-6 h-6" aria-hidden="true" />
+                      </div>
+                      <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Fleet Tanker Drivers</h3>
+                      <p className="text-sm text-cas-muted leading-relaxed mb-6">
+                        Register under your marketer using their single-use authorization code or link. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
+                      </p>
+                    </div>
+
+                    <div>
+                      <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
+                        <div className="flex items-center gap-2">
+                          <KeyRound className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                          <span>Bound to employer marketer via code</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
+                          <span>One-tap GPS navigation to discharge gate</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenRegistration('driver')}
+                        className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+                      >
+                        <span>Register With Marketer Code</span>
+                        <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </section>
 
-            {/* 5. Corporate FAQ Section */}
-            <section className="bg-cas-canvas py-12 md:py-20 border-b border-cas-border">
-              <div className="max-w-4xl mx-auto px-4 sm:px-8">
-                <div className="text-center mb-12">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-200 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
-                    <HelpCircle className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-                    <span>Frequently Answered Questions</span>
+            {/* Signature Element: Escrow Terminal */}
+            <EscrowTerminal />
+
+            {/* Live Marketplace */}
+            <Marketplace 
+              onSelectSupplierForEscrow={handleSelectSupplierForEscrow}
+            />
+
+            {/* Fiduciary Architecture Section */}
+            <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
+              <div className="max-w-7xl mx-auto px-4 sm:px-8">
+                <div className="text-center max-w-3xl mx-auto mb-12">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
+                    <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
+                    <span>Trust & Security Architecture</span>
                   </div>
                   <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-                    Frequently Asked Questions
+                    How CAS Escrow Protects Both Parties
                   </h2>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="p-6 bg-white rounded-xl border border-slate-200">
-                    <h4 className="font-bold text-base text-cas-slate mb-2">
-                      How does CAS Escrow hold buyer funds securely?
-                    </h4>
-                    <p className="text-sm text-cas-muted leading-relaxed">
-                      Buyer payments are held in an independent custodial account managed by licensed institutional trustees (Stanbic IBTC Nominees / FCMB Trustees). Funds cannot be accessed by CAS Energy, the buyer, or the marketer until the physical delivery criteria are met.
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200">
+                    <h3 className="text-lg font-extrabold text-cas-slate mb-3 flex items-center gap-2">
+                      <Lock className="w-5 h-5 text-cas-blue" aria-hidden="true" />
+                      <span>Buyer Protection</span>
+                    </h3>
+                    <ul className="space-y-3 text-sm text-cas-muted">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
+                        <span>Funds remain untouched until the tanker enters within 100 meters of your registered gate.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
+                        <span>Quality disputes before discharge trigger full 100% escrow refund within 24 banking hours.</span>
+                      </li>
+                    </ul>
                   </div>
 
-                  <div className="p-6 bg-white rounded-xl border border-slate-200">
-                    <h4 className="font-bold text-base text-cas-slate mb-2">
-                      Why does the platform require GPS location during registration?
-                    </h4>
-                    <p className="text-sm text-cas-muted leading-relaxed">
-                      Accurate delivery of bulk fuel requires millimeter clarity. Drivers need exact gate coordinates to prevent dangerous turnarounds on narrow urban roads. Furthermore, the GPS perimeter ensures that the payment release button cannot be activated prematurely.
-                    </p>
-                  </div>
-
-                  <div className="p-6 bg-white rounded-xl border border-slate-200">
-                    <h4 className="font-bold text-base text-cas-slate mb-2">
-                      What happens if the delivered diesel fails our quality test?
-                    </h4>
-                    <p className="text-sm text-cas-muted leading-relaxed">
-                      Your receiving officer tests the fuel density with a hydrometer and inspects bottom samples before connecting the discharge hose. If the fuel fails specifications, the officer files an instant dispute on the platform. The tanker remains sealed, and 100% of your escrow deposit is protected.
-                    </p>
-                  </div>
-
-                  <div className="p-6 bg-white rounded-xl border border-slate-200">
-                    <h4 className="font-bold text-base text-cas-slate mb-2">
-                      What are the demurrage rules for delayed off-loading?
-                    </h4>
-                    <p className="text-sm text-cas-muted leading-relaxed">
-                      Drivers allow up to four free hours of detention upon arrival at the buyer gate. If facility tank maintenance or administrative delays exceed four hours, demurrage is assessed at ₦15,000 per hour to compensate the driver and marketer.
-                    </p>
+                  <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200">
+                    <h3 className="text-lg font-extrabold text-cas-slate mb-3 flex items-center gap-2">
+                      <Lock className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
+                      <span>Marketer Protection</span>
+                    </h3>
+                    <ul className="space-y-3 text-sm text-cas-muted">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
+                        <span>Escrow is verified and locked before your calibrated tanker leaves the loading terminal.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
+                        <span>Once the truck departs the gantry, cancellation is blocked to protect your fuel in transit.</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
             </section>
           </>
         )}
-
-        {/* Persona Perspective 2: Buyer Facility Setup */}
-        {activeView === 'buyer' && (
-          <BuyerDischargeSetup />
-        )}
-
-        {/* Persona Perspective 3: Supplier Desk */}
-        {activeView === 'supplier' && (
-          <SupplierPortal />
-        )}
-
-        {/* Persona Perspective 4: Driver Cockpit */}
-        {activeView === 'driver' && (
-          <DriverCockpit />
-        )}
       </main>
 
-      {/* Compliance & Policy Modals */}
+      {/* Compliance Modals */}
       <LegalModals 
-        activeModal={activeLegalModal} 
-        onClose={() => setActiveLegalModal(null)} 
+        activeModal={activeLegalModal}
+        onClose={() => setActiveLegalModal(null)}
       />
 
-      {/* Cookie Consent Banner */}
+      {/* Cookie Banner */}
       <CookieBanner onOpenPolicy={(modal) => setActiveLegalModal(modal)} />
 
-      {/* Universal Footer with Real Corporate Details & Legal Links */}
+      {/* Footer */}
       <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
     </div>
   );
