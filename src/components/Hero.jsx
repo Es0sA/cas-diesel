@@ -3,17 +3,17 @@ import { ShieldCheck, MapPin, CheckCircle2, Lock, ArrowRight, Truck } from 'luci
 
 export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
   return (
-    <section className="bg-white py-12 md:py-20 border-b border-cas-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+    <section className="bg-white py-8 sm:py-16 md:py-20 border-b border-cas-border">
+      <div className="max-w-7xl mx-auto px-3 sm:px-8">
         <div className="max-w-4xl">
           {/* Regulatory Trust Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-cas-amber/40 text-cas-amberDark text-xs sm:text-sm font-bold mb-6">
-            <ShieldCheck className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-            <span>Downstream Petroleum Trading Architecture | Powered by CAS</span>
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-cas-amber/40 text-cas-amberDark text-[11px] sm:text-sm font-bold mb-4 sm:mb-6">
+            <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cas-amberDark shrink-0" aria-hidden="true" />
+            <span>Downstream Petroleum Trading Architecture | CAS Energy</span>
           </div>
 
           {/* Main Headline with large high-contrast typography */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-cas-slate tracking-tight leading-[1.15] mb-6">
+          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-extrabold text-cas-slate tracking-tight leading-[1.2] sm:leading-[1.15] mb-4 sm:mb-6">
             Direct Depot Pricing. <br />
             <span className="text-cas-amberDark underline decoration-cas-amber/50 decoration-4 underline-offset-8">
               Escrow Protected.
@@ -22,7 +22,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
           </h1>
 
           {/* Subtitle formatted for maximum clarity */}
-          <p className="text-lg sm:text-xl text-cas-muted leading-relaxed mb-8 max-w-3xl">
+          <p className="text-base sm:text-xl text-cas-muted leading-relaxed mb-6 sm:mb-8 max-w-3xl">
             CAS Energy connects corporate procurement officers with licensed Nigerian depot marketers.
             Your payment is held safely in escrow. Once delivery begins, dispatch is guaranteed, and funds can only be released after the truck arrives inside your registered facility perimeter.
           </p>

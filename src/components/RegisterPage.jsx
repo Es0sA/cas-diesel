@@ -168,29 +168,29 @@ export default function RegisterPage({
   };
 
   return (
-    <div className="bg-cas-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-8">
+    <div className="bg-cas-canvas min-h-screen py-6 sm:py-16">
+      <div className="max-w-4xl mx-auto px-3 sm:px-8">
         
         {/* Back Button */}
         <button
           type="button"
           onClick={onBackToHome}
-          className="inline-flex items-center gap-2 text-sm font-bold text-cas-slate hover:text-black mb-8 px-3 py-1.5 rounded bg-white border border-cas-border shadow-sm transition-colors"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-cas-slate hover:text-black mb-6 sm:mb-8 px-3 py-1.5 rounded bg-white border border-cas-border shadow-sm transition-colors"
         >
           <ArrowLeft className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
           <span>Return to Homepage</span>
         </button>
 
         {/* Page Title & Context */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-200 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-200 text-cas-slate text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2 sm:mb-3">
             <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
             <span>Regulated Downstream Registration</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
             Create Your CAS Energy Account
           </h1>
-          <p className="text-base text-cas-muted mt-2">
+          <p className="text-sm sm:text-base text-cas-muted mt-2">
             Select your role below. Buyers map their facility gate coordinates; drivers must provide an authorization code from their employing marketer.
           </p>
         </div>

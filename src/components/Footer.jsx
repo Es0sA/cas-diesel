@@ -5,7 +5,7 @@ export default function Footer({ onOpenLegalModal }) {
   return (
     <footer className="bg-cas-slate text-slate-300 border-t border-slate-800 text-sm">
       {/* Upper Footer: Real Business Credentials */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-8 py-8 sm:py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
           {/* Brand & Corporate Structure */}

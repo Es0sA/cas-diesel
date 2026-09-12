@@ -9,6 +9,7 @@ import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
+import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import { 
   Building2, 
@@ -89,11 +90,11 @@ export default function App() {
         onOpenLegalModal={(modal) => setActiveLegalModal(modal)}
       />
 
-      {/* Live Depot Spot Ticker */}
-      <DepotTicker />
+      {/* Live Depot Spot Ticker (Rendered on Home view) */}
+      {currentView === 'home' && <DepotTicker />}
 
       {/* Main Body */}
-      <main className="flex-1">
+      <main className="flex-1 pb-20 md:pb-0">
         {/* VIEW 1: REGISTRATION PAGE */}
         {currentView === 'register' && (
           <RegisterPage 
@@ -335,6 +336,15 @@ export default function App() {
 
       {/* Cookie Banner */}
       <CookieBanner onOpenPolicy={(modal) => setActiveLegalModal(modal)} />
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav 
+        currentView={currentView}
+        onNavigate={(view) => {
+          setCurrentView(view);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
 
       {/* Footer */}
       <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
