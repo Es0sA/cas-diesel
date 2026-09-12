@@ -19,9 +19,7 @@ import {
   Lock, 
   ArrowRight, 
   KeyRound, 
-  CheckCircle2, 
-  HelpCircle,
-  MapPin
+  CheckCircle2
 } from 'lucide-react';
 
 export default function App() {
@@ -110,17 +108,14 @@ export default function App() {
 
         {/* VIEW 2: SUPPLIER OPERATIONS DESK */}
         {currentView === 'supplier-portal' && (
-          <SupplierPortal 
-            onNavigateToDriverDemo={() => {
-              setCurrentView('driver-cockpit');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          />
+          <SupplierPortal />
         )}
 
         {/* VIEW 3: DRIVER COCKPIT */}
         {currentView === 'driver-cockpit' && (
-          <DriverCockpit />
+          <DriverCockpit 
+            onNavigateToRegister={() => handleOpenRegistration('driver')}
+          />
         )}
 
         {/* VIEW 4: HOMEPAGE (WHAT WE DO + THREE ROLES + ESCROW TERMINAL + MARKETPLACE) */}

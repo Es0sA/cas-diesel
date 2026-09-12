@@ -223,7 +223,7 @@ export default function Header({
             </button>
             <button 
               type="button" 
-              onClick={() => handleModalClick('refunds')}
+              onClick={() => handleModalClick('refund')}
               className="underline underline-offset-2 hover:text-cas-slate"
             >
               Demurrage & Refunds

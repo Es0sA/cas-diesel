@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { INITIAL_INVITES } from '../data/invites';
 
-export default function SupplierPortal({ onNavigateToDriverDemo }) {
+export default function SupplierPortal() {
   const [dailySpotPrice, setDailySpotPrice] = useState(1175);
   const [availableLitres, setAvailableLitres] = useState(450000);
   const [minOrderVolume, setMinOrderVolume] = useState(11000);

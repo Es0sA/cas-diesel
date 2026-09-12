@@ -20,7 +20,7 @@ export default function LegalModals({ activeModal, onClose }) {
             <h3 id="modal-title" className="font-extrabold text-lg sm:text-xl text-white">
               {activeModal === 'terms' && 'Terms of Service & Escrow Rules'}
               {activeModal === 'privacy' && 'Privacy Policy & NDPR Compliance'}
-              {activeModal === 'refund' && 'Refund, Demurrage & Quality Disputes'}
+              {(activeModal === 'refund' || activeModal === 'refunds') && 'Refund, Demurrage & Quality Disputes'}
               {activeModal === 'cookies' && 'Cookies & Security Policy'}
             </h3>
           </div>
@@ -98,7 +98,7 @@ export default function LegalModals({ activeModal, onClose }) {
           )}
 
           {/* Refund & Demurrage Content */}
-          {activeModal === 'refund' && (
+          {(activeModal === 'refund' || activeModal === 'refunds') && (
             <>
               <div>
                 <h4 className="font-bold text-base text-cas-slate mb-2">1. Fuel Rejection Protocol</h4>
