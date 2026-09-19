@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { INITIAL_INVITES } from '../data/invites';
 import { DEPOT_PRICES } from '../data/depots';
+import { api } from '../api';
 
 export default function RegisterPage({ 
   onBackToHome, 
@@ -120,51 +121,116 @@ export default function RegisterPage({
     }
   };
 
-  const handleDriverSubmit = (e) => {
+  const handleDriverSubmit = async (e) => {
     e.preventDefault();
     if (!verifiedSupplier) {
       setCodeError('You must enter a valid marketer authorization code to register as a driver.');
       return;
     }
 
-    // Mark code as redeemed
-    const updatedInvites = invites.map(inv => {
-      if (inv.code === verifiedSupplier.code) {
-        return {
-          ...inv,
-          status: 'used',
-          usedBy: `${driverName} (${driverPlate})`
-        };
-      }
-      return inv;
-    });
+    try {
+      // 1. Create User
+      const email = `driver_${driverPhone.replace(/\D/g, '')}_${Date.now()}@cas.local`;
+      const password = 'SecurePassword123!';
+      const regData = await api.auth.register({ email, password, role: 'DRIVER' });
 
-    setInvites(updatedInvites);
-    localStorage.setItem('cas_invites_store', JSON.stringify(updatedInvites));
+      // 2. Login
+      const loginData = await api.auth.login({ email, password });
+      
+      localStorage.setItem('cas_token', loginData.token);
 
-    setSubmitSuccess({
-      role: 'driver',
-      title: 'Driver Registration Approved',
-      message: `You are now officially registered as a fleet tanker driver for ${verifiedSupplier.supplierName}. You will receive order dispatch notifications on WhatsApp at ${driverPhone}.`
-    });
+      // 3. Create Driver Profile
+      const [firstName, ...lastNames] = driverName.split(' ');
+      await api.drivers.updateProfile({
+        firstName: firstName || 'Unknown',
+        lastName: lastNames.join(' ') || 'Driver',
+        licenseNumber: driverLicense,
+        truckPlateNumber: driverPlate,
+        truckCapacityLiters: driverCapacity
+      });
+
+      // Mark code as redeemed
+      const updatedInvites = invites.map(inv => {
+        if (inv.code === verifiedSupplier.code) {
+          return {
+            ...inv,
+            status: 'used',
+            usedBy: `${driverName} (${driverPlate})`
+          };
+        }
+        return inv;
+      });
+
+      setInvites(updatedInvites);
+      localStorage.setItem('cas_invites_store', JSON.stringify(updatedInvites));
+
+      setSubmitSuccess({
+        role: 'driver',
+        title: 'Driver Registration Approved',
+        message: `You are now officially registered as a fleet tanker driver for ${verifiedSupplier.supplierName}. You will receive order dispatch notifications on WhatsApp at ${driverPhone}.`
+      });
+    } catch (err) {
+      console.error(err);
+      setCodeError(err.message || 'An error occurred during registration.');
+    }
   };
 
-  const handleBuyerSubmit = (e) => {
+  const handleBuyerSubmit = async (e) => {
     e.preventDefault();
-    setSubmitSuccess({
-      role: 'buyer',
-      title: 'Corporate Buyer Account Activated',
-      message: `${buyerCompany} has been registered with verified discharge gate coordinates at (${latitude}, ${longitude}). You can now deposit into escrow and order directly from loading terminals.`
-    });
+    try {
+      const email = `admin@${buyerCompany.replace(/\s+/g, '').toLowerCase()}.com`;
+      const password = 'SecurePassword123!';
+      
+      const regData = await api.auth.register({ email, password, role: 'BUYER' });
+      const loginData = await api.auth.login({ email, password });
+      
+      localStorage.setItem('cas_token', loginData.token);
+
+      await api.companies.updateProfile({
+        companyName: buyerCompany,
+        registrationNumber: buyerRcNumber,
+        businessAddress: `${latitude}, ${longitude}`,
+        contactPhone: receivingOfficerPhone
+      });
+
+      setSubmitSuccess({
+        role: 'buyer',
+        title: 'Corporate Buyer Account Activated',
+        message: `${buyerCompany} has been registered with verified discharge gate coordinates at (${latitude}, ${longitude}). You can now deposit into escrow and order directly from loading terminals.`
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'An error occurred during buyer registration.');
+    }
   };
 
-  const handleSupplierSubmit = (e) => {
+  const handleSupplierSubmit = async (e) => {
     e.preventDefault();
-    setSubmitSuccess({
-      role: 'supplier',
-      title: 'Marketer Account Created',
-      message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices and generate one-time driver invitation links.`
-    });
+    try {
+      const email = `admin@${supplierName.replace(/\s+/g, '').toLowerCase()}.com`;
+      const password = 'SecurePassword123!';
+      
+      const regData = await api.auth.register({ email, password, role: 'SUPPLIER' });
+      const loginData = await api.auth.login({ email, password });
+      
+      localStorage.setItem('cas_token', loginData.token);
+
+      await api.companies.updateProfile({
+        companyName: supplierName,
+        registrationNumber: supplierRc,
+        businessAddress: primaryDepot,
+        contactPhone: contactPhone
+      });
+
+      setSubmitSuccess({
+        role: 'supplier',
+        title: 'Marketer Account Created',
+        message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices and generate one-time driver invitation links.`
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'An error occurred during supplier registration.');
+    }
   };
 
   return (
