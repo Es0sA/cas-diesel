@@ -1,16 +1,16 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const request = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('cas_token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` }),
     ...options.headers,
   };
 
+  // P1: Send cookies automatically (HttpOnly JWT cookie) instead of reading from localStorage
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   const data = await response.json();
@@ -26,6 +26,7 @@ export const api = {
   auth: {
     register: (data) => request('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
     login: (data) => request('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
+    logout: () => request('/auth/logout', { method: 'POST' }),
   },
   companies: {
     getProfile: () => request('/companies/profile'),
@@ -43,7 +44,7 @@ export const api = {
     confirmDelivery: (id) => request(`/orders/${id}/confirm-delivery`, { method: 'POST' }),
   },
   chat: {
-    getMessages: (orderId) => request(`/chat/${orderId}`),
+    getMessages: (orderId, cursor) => request(`/chat/${orderId}${cursor ? `?cursor=${cursor}` : ''}`),
     sendMessage: (orderId, data) => request(`/chat/${orderId}/send`, { method: 'POST', body: JSON.stringify(data) }),
   },
   telemetry: {
