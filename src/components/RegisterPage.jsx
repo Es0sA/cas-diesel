@@ -209,7 +209,7 @@ export default function RegisterPage({
             Create Your CAS Energy Account
           </h1>
           <p className="text-sm sm:text-base text-cas-muted mt-2">
-            Select your role below. Buyers map their facility gate coordinates; drivers must provide an authorization code from their employing marketer.
+            Select your role below. Buyers map their facility gate coordinates.
           </p>
         </div>
 
@@ -290,9 +290,7 @@ export default function RegisterPage({
                 For downstream petroleum off-takers and depot owners marketing certified AGO at custom spot rates.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-cas-amberDark">
-              Includes Driver Code Generator
-            </div>
+
           </button>
 
           {/* Card 3: Driver */}
@@ -314,9 +312,7 @@ export default function RegisterPage({
                 For calibrated truck operators delivering fuel under an authorized marketer fleet.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-cas-green">
-              Requires Marketer Authorization Code
-            </div>
+
           </button>
 
         </div>
@@ -440,7 +436,7 @@ export default function RegisterPage({
                 className="w-full py-4 px-6 bg-cas-slate hover:bg-black text-white font-extrabold text-base rounded-lg transition-all shadow-md flex items-center justify-center gap-2 border-2 border-transparent hover:border-cas-amber disabled:opacity-50"
               >
                 <CheckCircle2 className="w-5 h-5 text-cas-green" aria-hidden="true" />
-                <span>Complete Driver Registration & Bind to Supplier Fleet</span>
+                <span>Complete Driver Registration</span>
               </button>
             </div>
 
@@ -832,7 +828,7 @@ export default function RegisterPage({
                 className="w-full py-4 px-6 bg-cas-slate hover:bg-black text-white font-extrabold text-base rounded-lg transition-all shadow-md flex items-center justify-center gap-2 border-2 border-transparent hover:border-cas-amber"
               >
                 <CheckCircle2 className="w-5 h-5 text-cas-green" aria-hidden="true" />
-                <span>Register Marketer Account & Enable Fleet Invitation Desk</span>
+                <span>Register Marketer Account</span>
               </button>
             </div>
 
