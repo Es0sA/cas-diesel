@@ -177,7 +177,7 @@ export default function RegisterPage({
       setSubmitSuccess({
         role: 'supplier',
         title: 'Marketer Account Created',
-        message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices and generate one-time driver invitation links.`
+        message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices.`
       });
     } catch (err) {
       console.error(err);
@@ -320,7 +320,7 @@ export default function RegisterPage({
         {/* Step 2: Role-Specific Forms */}
 
         {/* ============================================================ */}
-        {/* DRIVER REGISTRATION FORM (With Supplier Code Requirement) */}
+        {/* DRIVER REGISTRATION FORM */}
         {/* ============================================================ */}
         {selectedRole === 'driver' && (
           <form onSubmit={handleDriverSubmit} className="bg-white p-6 sm:p-10 rounded-2xl border-2 border-cas-border shadow-sm space-y-8">

@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   UserCheck, 
-  Truck, 
-  ShieldCheck, 
-  DollarSign, 
   CheckCircle2, 
-  Lock,
-  AlertCircle
+  Lock
 } from 'lucide-react';
 
 import { api } from '../api';
