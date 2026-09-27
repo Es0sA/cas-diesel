@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink } from 'lucide-react';
+import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn } from 'lucide-react';
 
 export default function Header({ 
   currentView, 
@@ -116,6 +116,19 @@ export default function Header({
               Driver Cockpit
             </button>
 
+            <button
+              type="button"
+              onClick={() => handleNavClick('login')}
+              className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${
+                currentView === 'login'
+                  ? 'bg-slate-100 text-cas-slate'
+                  : 'text-cas-muted hover:text-cas-slate'
+              }`}
+            >
+              <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+              <span>Sign In</span>
+            </button>
+
             {/* Primary Registration CTA Button */}
             <button
               type="button"
@@ -193,6 +206,20 @@ export default function Header({
               }`}
             >
               <span>Driver Cockpit & Manifest</span>
+              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleNavClick('login')}
+              className={`flex items-center justify-between p-3 rounded-xl text-sm font-bold text-left transition-colors ${
+                currentView === 'login' ? 'bg-slate-100 text-cas-slate' : 'text-slate-700 hover:bg-slate-50'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                <span>Sign In to Terminal</span>
+              </div>
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
             </button>
 

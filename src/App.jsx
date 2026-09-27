@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
 import RegisterPage from './components/RegisterPage';
+import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import LegalModals from './components/LegalModals';
@@ -23,8 +24,9 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'supplier-portal', 'driver-cockpit'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'login', 'supplier-portal', 'driver-cockpit'
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
+  const [loginInitialRole, setLoginInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
 
   const [activeLegalModal, setActiveLegalModal] = useState(null);
 
@@ -36,7 +38,7 @@ export default function App() {
     if (role && ['buyer', 'supplier', 'driver'].includes(role)) {
       setRegisterInitialRole(role);
       setCurrentView('register');
-    } else if (view && ['home', 'register', 'supplier-portal', 'driver-cockpit'].includes(view)) {
+    } else if (view && ['home', 'register', 'login', 'supplier-portal', 'driver-cockpit'].includes(view)) {
       setCurrentView(view);
     } else if (view === 'supplier') {
       setCurrentView('supplier-portal');
@@ -48,6 +50,12 @@ export default function App() {
   const handleOpenRegistration = (role = 'buyer') => {
     setRegisterInitialRole(role);
     setCurrentView('register');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenLogin = (role = 'buyer') => {
+    setLoginInitialRole(role);
+    setCurrentView('login');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -63,6 +71,18 @@ export default function App() {
     if (role === 'supplier') {
       setCurrentView('supplier-portal');
     } else if (role === 'driver') {
+      setCurrentView('driver-cockpit');
+    } else {
+      setCurrentView('home');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLoginSuccess = (role) => {
+    const normalizedRole = (role || '').toUpperCase();
+    if (normalizedRole === 'SUPPLIER') {
+      setCurrentView('supplier-portal');
+    } else if (normalizedRole === 'DRIVER') {
       setCurrentView('driver-cockpit');
     } else {
       setCurrentView('home');
@@ -91,12 +111,25 @@ export default function App() {
         {currentView === 'register' && (
           <RegisterPage 
             initialRole={registerInitialRole}
-
             onBackToHome={() => {
               setCurrentView('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             onRegistrationSuccess={handleRegistrationSuccess}
+            onNavigateToLogin={handleOpenLogin}
+          />
+        )}
+
+        {/* VIEW: LOGIN TERMINAL */}
+        {currentView === 'login' && (
+          <LoginPage 
+            initialRole={loginInitialRole}
+            onBackToHome={() => {
+              setCurrentView('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onLoginSuccess={handleLoginSuccess}
+            onNavigateToRegister={(role) => handleOpenRegistration(role)}
           />
         )}
 
