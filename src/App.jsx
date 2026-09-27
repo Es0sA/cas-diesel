@@ -4,7 +4,6 @@ import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
 import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
-import RegisterPage from './components/RegisterPage';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
@@ -107,16 +106,18 @@ export default function App() {
 
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
-        {/* VIEW 1: REGISTRATION PAGE */}
+        {/* VIEW 1: REGISTRATION TERMINAL */}
         {currentView === 'register' && (
-          <RegisterPage 
+          <LoginPage 
             initialRole={registerInitialRole}
+            initialMode="register"
             onBackToHome={() => {
               setCurrentView('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            onLoginSuccess={handleLoginSuccess}
             onRegistrationSuccess={handleRegistrationSuccess}
-            onNavigateToLogin={handleOpenLogin}
+            onNavigateToRegister={(role) => handleOpenRegistration(role)}
           />
         )}
 
@@ -124,11 +125,13 @@ export default function App() {
         {currentView === 'login' && (
           <LoginPage 
             initialRole={loginInitialRole}
+            initialMode="signin"
             onBackToHome={() => {
               setCurrentView('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             onLoginSuccess={handleLoginSuccess}
+            onRegistrationSuccess={handleRegistrationSuccess}
             onNavigateToRegister={(role) => handleOpenRegistration(role)}
           />
         )}
