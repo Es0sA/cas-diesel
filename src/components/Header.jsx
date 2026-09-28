@@ -140,7 +140,7 @@ export default function Header({
               }`}
             >
               <UserPlus className="w-4 h-4" aria-hidden="true" />
-              <span>Create Account / Register</span>
+              <span>Create Account</span>
             </button>
           </div>
 
@@ -229,7 +229,7 @@ export default function Header({
               className="flex items-center justify-center gap-2 p-3 mt-1 rounded-xl text-sm font-extrabold bg-cas-amber text-slate-900 shadow-sm border border-amber-500"
             >
               <UserPlus className="w-4 h-4" aria-hidden="true" />
-              <span>Create Account / Register</span>
+              <span>Create Account</span>
             </button>
           </div>
 
