@@ -106,26 +106,12 @@ export default function App() {
 
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
-        {/* VIEW 1: REGISTRATION TERMINAL */}
-        {currentView === 'register' && (
+        {/* VIEW: INTEGRATED AUTH TERMINAL (LOGIN & REGISTRATION) */}
+        {(currentView === 'register' || currentView === 'login') && (
           <LoginPage 
-            initialRole={registerInitialRole}
-            initialMode="register"
-            onBackToHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onLoginSuccess={handleLoginSuccess}
-            onRegistrationSuccess={handleRegistrationSuccess}
-            onNavigateToRegister={(role) => handleOpenRegistration(role)}
-          />
-        )}
-
-        {/* VIEW: LOGIN TERMINAL */}
-        {currentView === 'login' && (
-          <LoginPage 
-            initialRole={loginInitialRole}
-            initialMode="signin"
+            key={`${currentView}-${currentView === 'register' ? registerInitialRole : loginInitialRole}`}
+            initialRole={currentView === 'register' ? registerInitialRole : loginInitialRole}
+            initialMode={currentView === 'register' ? 'register' : 'signin'}
             onBackToHome={() => {
               setCurrentView('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
