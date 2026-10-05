@@ -11,6 +11,7 @@ import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
+import AdminDashboard from './components/AdminDashboard';
 import BottomNav from './components/BottomNav';
 import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
@@ -305,6 +306,7 @@ export default function App() {
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
           <Route path="/orders/:id" element={<OrderDetail />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
+          <Route path="/admin" element={<AdminDashboard user={user} />} />
         </Routes>
       </main>
 
