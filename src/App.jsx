@@ -110,6 +110,8 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-cas-canvas text-cas-slate">
       {/* Top Header */}
       <Header 
+        user={user}
+        onLogout={handleLogout}
         currentView={currentView}
         onNavigate={(view) => {
           setCurrentView(view);
@@ -184,8 +186,10 @@ export default function App() {
         {/* VIEW 4: HOMEPAGE (WHAT WE DO + THREE ROLES + ESCROW TERMINAL + MARKETPLACE) */}
         {currentView === 'home' && (
           <>
-            {/* Hero Section */}
-            <Hero 
+            {!user && (
+              <>
+                {/* Hero Section */}
+                <Hero 
               onExploreMarketplace={() => {
                 const market = document.getElementById('marketplace');
                 if (market) market.scrollIntoView({ behavior: 'smooth' });
@@ -320,6 +324,8 @@ export default function App() {
 
             {/* Signature Element: Escrow Terminal */}
             <EscrowTerminal />
+              </>
+            )}
 
             {/* Live Marketplace */}
             <Marketplace 
@@ -327,8 +333,9 @@ export default function App() {
             />
 
             {/* Fiduciary Architecture Section */}
-            <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
-              <div className="max-w-7xl mx-auto px-4 sm:px-8">
+            {!user && (
+              <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
+                <div className="max-w-7xl mx-auto px-4 sm:px-8">
                 <div className="text-center max-w-3xl mx-auto mb-12">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
                     <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
@@ -376,6 +383,7 @@ export default function App() {
                 </div>
               </div>
             </section>
+            )}
           </>
         )}
       </main>
