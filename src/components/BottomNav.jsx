@@ -1,12 +1,17 @@
 import React from 'react';
 import { Home, UserCheck, Truck, UserPlus } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function BottomNav({ currentView, onNavigate }) {
+export default function BottomNav() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
+
   const navItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'supplier-portal', label: 'Marketer Desk', icon: UserCheck },
-    { id: 'driver-cockpit', label: 'Driver Cockpit', icon: Truck },
-    { id: 'register', label: 'Register', icon: UserPlus, highlight: true }
+    { path: '/', label: 'Home', icon: Home },
+    { path: '/marketer', label: 'Marketer Desk', icon: UserCheck },
+    { path: '/driver', label: 'Driver Cockpit', icon: Truck },
+    { path: '/register', label: 'Register', icon: UserPlus, highlight: true }
   ];
 
   return (
@@ -17,14 +22,14 @@ export default function BottomNav({ currentView, onNavigate }) {
       <div className="grid grid-cols-4 items-center max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentView === item.id;
+          const isActive = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
 
           if (item.highlight) {
             return (
               <button
-                key={item.id}
+                key={item.path}
                 type="button"
-                onClick={() => onNavigate(item.id)}
+                onClick={() => navigate(item.path)}
                 className="flex flex-col items-center justify-center py-1 text-center group"
                 aria-label={item.label}
               >
@@ -46,9 +51,9 @@ export default function BottomNav({ currentView, onNavigate }) {
 
           return (
             <button
-              key={item.id}
+              key={item.path}
               type="button"
-              onClick={() => onNavigate(item.id)}
+              onClick={() => navigate(item.path)}
               className="flex flex-col items-center justify-center py-1 text-center group"
               aria-label={item.label}
             >

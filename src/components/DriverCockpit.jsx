@@ -234,7 +234,7 @@ export default function DriverCockpit({ onNavigateToRegister, onViewOrder }) {
               </p>
             </div>
             </div>
-            ))}
+            )))}
         </div>
 
       </div>

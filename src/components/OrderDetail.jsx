@@ -16,14 +16,6 @@ export default function OrderDetail({ orderId, onBack }) {
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef(null);
 
-  useEffect(() => {
-    fetchData();
-  }, [orderId]);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -49,6 +41,15 @@ export default function OrderDetail({ orderId, onBack }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [orderId]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
