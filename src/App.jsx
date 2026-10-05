@@ -11,6 +11,7 @@ import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
+import OrderDetail from './components/OrderDetail';
 import { api } from './api';
 import { 
   Building2, 
@@ -25,7 +26,8 @@ import {
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'login', 'supplier-portal', 'driver-cockpit'
+  const [currentView, setCurrentView] = useState('home');
+  const [selectedOrderId, setSelectedOrderId] = useState(null); // 'home', 'register', 'login', 'supplier-portal', 'driver-cockpit'
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
   const [loginInitialRole, setLoginInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
 
@@ -138,14 +140,31 @@ export default function App() {
           />
         )}
 
+        {/* VIEW 4: ORDER DETAIL */}
+        {currentView === 'order-detail' && selectedOrderId && (
+          <OrderDetail 
+            orderId={selectedOrderId} 
+            onBack={() => {
+              setCurrentView(user?.role?.toUpperCase() === 'SUPPLIER' ? 'supplier-portal' : (user?.role?.toUpperCase() === 'DRIVER' ? 'driver-cockpit' : 'home'));
+            }}
+          />
+        )}
+
         {/* VIEW 2: SUPPLIER OPERATIONS DESK */}
         {currentView === 'supplier-portal' && (
-          <SupplierPortal />
+          <SupplierPortal 
+            onViewOrder={(id) => {
+              setSelectedOrderId(id);
+              setCurrentView('order-detail');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
         )}
 
         {/* VIEW 3: DRIVER COCKPIT */}
         {currentView === 'driver-cockpit' && (
           <DriverCockpit 
+            onViewOrder={(id) => { setSelectedOrderId(id); setCurrentView('order-detail'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onNavigateToRegister={() => handleOpenRegistration('driver')}
           />
         )}
