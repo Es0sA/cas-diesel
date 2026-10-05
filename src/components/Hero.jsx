@@ -12,7 +12,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
           {/* Left Column: Value Proposition & CTAs (7 cols) */}
           <div className="lg:col-span-7">
             {/* Regulatory Trust Badge */}
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-cas-amber/40 text-cas-amberDark text-[11px] sm:text-xs font-bold mb-4 sm:mb-6">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-cas-amber/40 text-cas-amberDark text-xs sm:text-xs font-bold mb-4 sm:mb-6">
               <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cas-amberDark shrink-0" aria-hidden="true" />
               <span>Downstream Petroleum Trading Architecture | CAS Energy</span>
             </div>
@@ -40,7 +40,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                 className="px-6 sm:px-8 py-3.5 sm:py-4 bg-cas-slate hover:bg-black text-white font-bold text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 border-2 border-transparent hover:border-cas-amber"
               >
                 <span>Test the Escrow Simulator</span>
-                <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                <ArrowRight className="w-4 h-4 text-amber-400" aria-hidden="true" />
               </button>
 
               <button
@@ -84,7 +84,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                     Live Escrow Security Monitor
                   </span>
                 </div>
-                <span className="text-[10px] font-mono bg-cas-amber/20 text-cas-amber px-2 py-0.5 rounded border border-cas-amber/40">
+                <span className="text-xs font-mono bg-cas-amber/20 text-amber-400 px-2 py-0.5 rounded border border-cas-amber/40">
                   REF: CAS-8812
                 </span>
               </div>
@@ -96,7 +96,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                 <div className="p-3.5 bg-slate-800/60 rounded-xl border border-slate-700">
                   <div className="flex items-center justify-between text-slate-400 mb-1">
                     <span>Verified Loading Terminal:</span>
-                    <span className="text-cas-amber font-mono font-bold">Ijegun Egba Cluster</span>
+                    <span className="text-amber-400 font-mono font-bold">Ijegun Egba Cluster</span>
                   </div>
                   <div className="flex items-center justify-between text-slate-400">
                     <span>Product Grade:</span>
@@ -107,12 +107,12 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                 {/* Laboratory Specs Grid */}
                 <div className="grid grid-cols-2 gap-2.5 font-mono">
                   <div className="p-3 bg-slate-800/40 rounded-lg border border-slate-700/80">
-                    <span className="text-slate-400 block text-[11px]">Certified Density:</span>
+                    <span className="text-slate-400 block text-xs">Certified Density:</span>
                     <span className="text-white font-bold text-sm">0.839 kg/L</span>
                   </div>
                   <div className="p-3 bg-slate-800/40 rounded-lg border border-slate-700/80">
-                    <span className="text-slate-400 block text-[11px]">Flash Point:</span>
-                    <span className="text-cas-amber font-bold text-sm">67 °C (Pass)</span>
+                    <span className="text-slate-400 block text-xs">Flash Point:</span>
+                    <span className="text-amber-400 font-bold text-sm">67 °C (Pass)</span>
                   </div>
                 </div>
 
@@ -125,7 +125,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                     </span>
                     <span className="font-mono text-white text-sm">₦40,425,000</span>
                   </div>
-                  <p className="text-[11px] text-emerald-200/80 leading-snug">
+                  <p className="text-xs text-emerald-200/80 leading-snug">
                     Funds are secured by Stanbic Nominees. Payment release is physically impossible until the tanker enters your 100-meter gate geofence.
                   </p>
                 </div>
@@ -133,16 +133,16 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                 {/* Non-Cancellable Route Lock */}
                 <div className="p-3 bg-slate-800/60 rounded-xl border border-slate-700 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                    <Truck className="w-4 h-4 text-amber-400" aria-hidden="true" />
                     <div>
-                      <div className="font-bold text-white text-[11px]">Tanker LSR-492-XA in Transit</div>
-                      <div className="text-[10px] text-slate-400">Route Locked: Non-Cancellable by Buyer</div>
+                      <div className="font-bold text-white text-xs">Tanker LSR-492-XA in Transit</div>
+                      <div className="text-xs text-slate-400">Route Locked: Non-Cancellable by Buyer</div>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={onExploreSimulator}
-                    className="text-[11px] font-bold text-cas-amber hover:text-white underline underline-offset-2 shrink-0"
+                    className="text-xs font-bold text-amber-400 hover:text-white underline underline-offset-2 shrink-0"
                   >
                     View Radar
                   </button>
@@ -151,9 +151,9 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
               </div>
 
               {/* Card Footer */}
-              <div className="px-5 py-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+              <div className="px-5 py-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
                 <span>Discharge Radius: 100 Meters</span>
-                <span className="text-cas-green font-bold">Zero Default Record</span>
+                <span className="text-emerald-400 font-bold">Zero Default Record</span>
               </div>
 
             </div>
@@ -169,7 +169,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
               <Lock className="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 className="font-extrabold text-cas-slate text-base mb-1">Two-Sided Escrow Lock</h3>
+              <h2 className="font-extrabold text-cas-slate text-base mb-1">Two-Sided Escrow Lock</h2>
               <p className="text-xs text-cas-muted leading-relaxed">
                 Marketers are protected against payment defaults; corporate buyers are protected against failed or adulterated deliveries.
               </p>
@@ -181,7 +181,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
               <MapPin className="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 className="font-extrabold text-cas-slate text-base mb-1">Geofenced Sign-Off</h3>
+              <h2 className="font-extrabold text-cas-slate text-base mb-1">Geofenced Sign-Off</h2>
               <p className="text-xs text-cas-muted leading-relaxed">
                 Payment release is physically locked until the fuel tanker's verified GPS transponder crosses into your registered facility coordinates.
               </p>
@@ -193,7 +193,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
               <CheckCircle2 className="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 className="font-extrabold text-cas-slate text-base mb-1">Certified NMDPRA Quality</h3>
+              <h2 className="font-extrabold text-cas-slate text-base mb-1">Certified NMDPRA Quality</h2>
               <p className="text-xs text-cas-muted leading-relaxed">
                 Every loading manifest includes certified hydrometer density readings and flash point laboratory certificates before gantry discharge.
               </p>

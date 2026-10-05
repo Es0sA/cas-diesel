@@ -40,7 +40,7 @@ export default function BottomNav() {
                 }`}>
                   <Icon className="w-4 h-4" aria-hidden="true" />
                 </div>
-                <span className={`text-[10px] font-extrabold mt-1 tracking-tight ${
+                <span className={`text-xs font-extrabold mt-1 tracking-tight ${
                   isActive ? 'text-cas-slate' : 'text-slate-700'
                 }`}>
                   {item.label}
@@ -58,12 +58,12 @@ export default function BottomNav() {
               aria-label={item.label}
             >
               <div className={`p-1 rounded-lg transition-colors ${
-                isActive ? 'text-cas-slate font-bold' : 'text-slate-400 group-hover:text-slate-600'
+                isActive ? 'text-cas-slate font-bold' : 'text-slate-600 group-hover:text-slate-600'
               }`}>
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-2'}`} aria-hidden="true" />
               </div>
-              <span className={`text-[10px] font-medium tracking-tight ${
-                isActive ? 'text-cas-slate font-bold' : 'text-slate-500'
+              <span className={`text-xs font-medium tracking-tight ${
+                isActive ? 'text-cas-slate font-bold' : 'text-slate-600'
               }`}>
                 {item.label}
               </span>

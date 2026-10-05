@@ -61,8 +61,8 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
 
           <form id="checkout-form" onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-cas-slate mb-1">Volume (Litres)</label>
-              <input
+              <label htmlFor="fld-volume-litres-1" className="block text-sm font-bold text-cas-slate mb-1">Volume (Litres)</label>
+              <input id="fld-volume-litres-1"
                 type="number"
                 required
                 min={supplier.minOrderVolume}
@@ -76,8 +76,8 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-bold text-cas-slate mb-1">Gate Latitude</label>
-                <input
+                <label htmlFor="fld-gate-latitude-2" className="block text-sm font-bold text-cas-slate mb-1">Gate Latitude</label>
+                <input id="fld-gate-latitude-2"
                   type="number"
                   step="any"
                   required
@@ -87,8 +87,8 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-cas-slate mb-1">Gate Longitude</label>
-                <input
+                <label htmlFor="fld-gate-longitude-3" className="block text-sm font-bold text-cas-slate mb-1">Gate Longitude</label>
+                <input id="fld-gate-longitude-3"
                   type="number"
                   step="any"
                   required

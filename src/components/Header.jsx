@@ -23,12 +23,12 @@ export default function Header({
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-cas-border shadow-sm">
       {/* Top Regulatory & Operations Phone Bar */}
-      <div className="bg-cas-slate text-white text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-8">
+      <div className="bg-cas-slate text-white text-xs sm:text-xs py-1.5 sm:py-2 px-3 sm:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 sm:gap-2 truncate">
             <span className="inline-block w-2 h-2 rounded-full bg-cas-green animate-pulse shrink-0" aria-hidden="true"></span>
-            <span className="font-medium text-slate-300 truncate">NMDPRA Regulated Trading Hub</span>
-            <span className="text-slate-500 hidden sm:inline">|</span>
+            <span className="font-medium text-slate-300 truncate hidden min-[400px]:inline">NMDPRA Regulated Trading Hub</span>
+            <span className="text-slate-400 hidden sm:inline">|</span>
             <span className="text-slate-400 hidden sm:inline">CAS Holdings Nigeria</span>
           </div>
           <div className="flex items-center gap-3 text-slate-300 shrink-0">
@@ -70,11 +70,11 @@ export default function Header({
                 <span className="font-extrabold text-lg sm:text-2xl tracking-tight text-cas-slate group-hover:text-cas-amberDark transition-colors">
                   CAS Energy
                 </span>
-                <span className="bg-cas-amberLight text-cas-amberDark text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded border border-cas-amber">
+                <span className="bg-cas-amberLight text-cas-amberDark text-xs sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded border border-cas-amber">
                   AGO Diesel
                 </span>
               </div>
-              <p className="text-[11px] text-cas-muted font-medium hidden sm:block">
+              <p className="text-xs text-cas-muted font-medium hidden sm:block">
                 Bulk Fuel Marketplace & Geofenced Escrow Logistics
               </p>
             </div>
@@ -216,7 +216,7 @@ export default function Header({
               }`}
             >
               <span>What We Do & Marketplace</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
             </button>
 
             <button
@@ -227,7 +227,7 @@ export default function Header({
               }`}
             >
               <span>Downstream Supplier Desk</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
             </button>
 
             <button
@@ -238,7 +238,7 @@ export default function Header({
               }`}
             >
               <span>Driver Cockpit & Manifest</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
             </button>
 
             {user ? (
@@ -283,7 +283,7 @@ export default function Header({
                     <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
                     <span>Sign In to Terminal</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                  <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
                 </button>
 
                 <button

@@ -37,6 +37,7 @@ function HomePage({ user, handleOpenRegistration }) {
   };
   return (
     <>
+      {user && <h1 className="sr-only">Fuel marketplace</h1>}
       {!user && (
         <>
           <Hero 
@@ -247,6 +248,13 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Restore the logged-in state after a refresh (the session lives in an HttpOnly cookie)
+  useEffect(() => {
+    api.auth.me()
+      .then((session) => { if (session.role) setUser({ role: session.role }); })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
@@ -260,9 +268,10 @@ export default function App() {
 
   const handleRegistrationSuccess = (role) => {
     setUser({ role });
-    if (role === 'supplier') {
+    const normalizedRole = (role || '').toUpperCase();
+    if (normalizedRole === 'SUPPLIER') {
       navigate('/marketer');
-    } else if (role === 'driver') {
+    } else if (normalizedRole === 'DRIVER') {
       navigate('/driver');
     } else {
       navigate('/');
@@ -299,7 +308,7 @@ export default function App() {
       <Header user={user} onLogout={handleLogout} onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
 
       {/* Main Body */}
-      <main className="flex-1 pb-20 md:pb-0">
+      <main className="flex-1">
         <Routes>
           <Route path="/" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
@@ -325,7 +334,9 @@ export default function App() {
       <BottomNav />
 
       {/* Footer */}
-      <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
+      <div className="pb-20 md:pb-0 bg-slate-950">
+        <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
+      </div>
     </div>
   );
 }
