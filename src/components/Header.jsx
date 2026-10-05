@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn, LogOut } from 'lucide-react';
+import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn, LogOut, Settings } from 'lucide-react';
 
 export default function Header({ 
   currentView, 
@@ -120,6 +120,18 @@ export default function Header({
 
             {user ? (
               <>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick('profile')}
+                  className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${
+                    currentView === 'profile'
+                      ? 'bg-cas-amberLight text-cas-amberDark border border-cas-amber'
+                      : 'text-cas-muted hover:text-cas-slate bg-slate-100 hover:bg-slate-200 border border-transparent'
+                  }`}
+                >
+                  <Settings className="w-4 h-4" aria-hidden="true" />
+                  <span>Profile</span>
+                </button>
                 <div className="px-3 py-2 bg-cas-amberLight text-cas-amberDark font-bold rounded-lg text-xs sm:text-sm border border-cas-amber uppercase">
                   {user.role}
                 </div>
@@ -234,6 +246,16 @@ export default function Header({
                 <div className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-left bg-cas-amberLight text-cas-amberDark border border-cas-amber uppercase">
                   <span>Role: {user.role}</span>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick('profile')}
+                  className={`flex items-center justify-between p-3 mt-1 rounded-xl text-sm font-bold text-left ${currentView === 'profile' ? 'bg-slate-200 text-cas-slate' : 'text-slate-700 hover:bg-slate-50 bg-slate-100'}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Settings className="w-4 h-4 text-cas-slate" aria-hidden="true" />
+                    <span>Profile Settings</span>
+                  </div>
+                </button>
                 <button
                   type="button"
                   onClick={() => {

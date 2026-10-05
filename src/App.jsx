@@ -12,6 +12,7 @@ import CookieBanner from './components/CookieBanner';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import OrderDetail from './components/OrderDetail';
+import ProfileSettings from './components/ProfileSettings';
 import { api } from './api';
 import { 
   Building2, 
@@ -166,6 +167,17 @@ export default function App() {
           <DriverCockpit 
             onViewOrder={(id) => { setSelectedOrderId(id); setCurrentView('order-detail'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onNavigateToRegister={() => handleOpenRegistration('driver')}
+          />
+        )}
+
+        {/* VIEW 5: PROFILE SETTINGS */}
+        {currentView === 'profile' && user && (
+          <ProfileSettings
+            user={user}
+            onBack={() => {
+              setCurrentView(user?.role?.toUpperCase() === 'SUPPLIER' ? 'supplier-portal' : (user?.role?.toUpperCase() === 'DRIVER' ? 'driver-cockpit' : 'home'));
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
           />
         )}
 
