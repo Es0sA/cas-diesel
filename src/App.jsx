@@ -272,7 +272,9 @@ export default function App() {
   const handleLoginSuccess = (role) => {
     setUser({ role });
     const normalizedRole = (role || '').toUpperCase();
-    if (normalizedRole === 'SUPPLIER') {
+    if (normalizedRole === 'ADMIN') {
+      navigate('/admin');
+    } else if (normalizedRole === 'SUPPLIER') {
       navigate('/marketer');
     } else if (normalizedRole === 'DRIVER') {
       navigate('/driver');
