@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn } from 'lucide-react';
+import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn, LogOut } from 'lucide-react';
 
 export default function Header({ 
   currentView, 
   onNavigate, 
-  onOpenLegalModal 
+  onOpenLegalModal,
+  user,
+  onLogout
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -116,32 +118,50 @@ export default function Header({
               Driver Cockpit
             </button>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('login')}
-              className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${
-                currentView === 'login'
-                  ? 'bg-slate-100 text-cas-slate'
-                  : 'text-cas-muted hover:text-cas-slate'
-              }`}
-            >
-              <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-              <span>Sign In</span>
-            </button>
+            {user ? (
+              <>
+                <div className="px-3 py-2 bg-cas-amberLight text-cas-amberDark font-bold rounded-lg text-xs sm:text-sm border border-cas-amber uppercase">
+                  {user.role}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onLogout()}
+                  className="px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 text-cas-muted hover:text-cas-slate bg-slate-100 hover:bg-slate-200"
+                >
+                  <LogOut className="w-4 h-4 text-cas-slate" aria-hidden="true" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick('login')}
+                  className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${
+                    currentView === 'login'
+                      ? 'bg-slate-100 text-cas-slate'
+                      : 'text-cas-muted hover:text-cas-slate'
+                  }`}
+                >
+                  <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                  <span>Sign In</span>
+                </button>
 
-            {/* Primary Registration CTA Button */}
-            <button
-              type="button"
-              onClick={() => handleNavClick('register')}
-              className={`px-4 lg:px-5 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 shadow-sm ${
-                currentView === 'register'
-                  ? 'bg-cas-slate text-white'
-                  : 'bg-cas-amber hover:bg-cas-amberDark text-slate-900 hover:text-white border-2 border-cas-amber'
-              }`}
-            >
-              <UserPlus className="w-4 h-4" aria-hidden="true" />
-              <span>Create Account</span>
-            </button>
+                {/* Primary Registration CTA Button */}
+                <button
+                  type="button"
+                  onClick={() => handleNavClick('register')}
+                  className={`px-4 lg:px-5 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 shadow-sm ${
+                    currentView === 'register'
+                      ? 'bg-cas-slate text-white'
+                      : 'bg-cas-amber hover:bg-cas-amberDark text-slate-900 hover:text-white border-2 border-cas-amber'
+                  }`}
+                >
+                  <UserPlus className="w-4 h-4" aria-hidden="true" />
+                  <span>Create Account</span>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Right Controls: Quick Call & Hamburger Menu */}
@@ -209,28 +229,51 @@ export default function Header({
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
             </button>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('login')}
-              className={`flex items-center justify-between p-3 rounded-xl text-sm font-bold text-left transition-colors ${
-                currentView === 'login' ? 'bg-slate-100 text-cas-slate' : 'text-slate-700 hover:bg-slate-50'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-                <span>Sign In to Terminal</span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
-            </button>
+            {user ? (
+              <>
+                <div className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-left bg-cas-amberLight text-cas-amberDark border border-cas-amber uppercase">
+                  <span>Role: {user.role}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center justify-between p-3 mt-1 rounded-xl text-sm font-bold text-left text-slate-700 hover:bg-slate-50 bg-slate-100"
+                >
+                  <div className="flex items-center gap-2">
+                    <LogOut className="w-4 h-4 text-cas-slate" aria-hidden="true" />
+                    <span>Sign Out</span>
+                  </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick('login')}
+                  className={`flex items-center justify-between p-3 rounded-xl text-sm font-bold text-left transition-colors ${
+                    currentView === 'login' ? 'bg-slate-100 text-cas-slate' : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                    <span>Sign In to Terminal</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                </button>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('register')}
-              className="flex items-center justify-center gap-2 p-3 mt-1 rounded-xl text-sm font-extrabold bg-cas-amber text-slate-900 shadow-sm border border-amber-500"
-            >
-              <UserPlus className="w-4 h-4" aria-hidden="true" />
-              <span>Create Account</span>
-            </button>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick('register')}
+                  className="flex items-center justify-center gap-2 p-3 mt-1 rounded-xl text-sm font-extrabold bg-cas-amber text-slate-900 shadow-sm border border-amber-500"
+                >
+                  <UserPlus className="w-4 h-4" aria-hidden="true" />
+                  <span>Create Account</span>
+                </button>
+              </>
+            )}
           </div>
 
           <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">

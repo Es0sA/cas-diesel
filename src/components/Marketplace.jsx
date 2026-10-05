@@ -1,13 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { api } from '../api';
 import { SUPPLIERS, DEPOT_PRICES } from '../data/depots';
-import { Search, Filter, ShieldCheck, CheckCircle2, Truck, ArrowUpDown, ChevronRight } from 'lucide-react';
+import { Search, Filter, ShieldCheck, CheckCircle2, Truck, ArrowUpDown, ChevronRight, Loader2 } from 'lucide-react';
 
 export default function Marketplace({ onSelectSupplierForEscrow }) {
   const [selectedDepotFilter, setSelectedDepotFilter] = useState('all');
   const [sortBy, setSortBy] = useState('price-asc');
   const [searchQuery, setSearchQuery] = useState('');
+  const [suppliers, setSuppliers] = useState(SUPPLIERS);
+  const [loading, setLoading] = useState(true);
 
-  const filteredSuppliers = SUPPLIERS.filter((sup) => {
+  useEffect(() => {
+    let mounted = true;
+    api.companies.listSuppliers()
+      .then((data) => {
+        if (mounted) {
+          if (data && data.length > 0) {
+            setSuppliers(data);
+          }
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch suppliers:', err);
+        if (mounted) {
+          setLoading(false);
+        }
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  const filteredSuppliers = suppliers.filter((sup) => {
     const matchesDepot = selectedDepotFilter === 'all' || sup.depotId === selectedDepotFilter;
     const matchesSearch = sup.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           sup.primaryDepot.toLowerCase().includes(searchQuery.toLowerCase());
@@ -143,71 +166,78 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
         </div>
 
         {/* Supplier Cards List */}
-        <div className="space-y-4">
-          {filteredSuppliers.map((supplier) => (
-            <div
-              key={supplier.id}
-              className="p-5 sm:p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-cas-amber transition-all shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"
-            >
-              {/* Marketer Credentials */}
-              <div className="max-w-xl">
-                <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                  <span className="font-extrabold text-lg text-cas-slate">{supplier.companyName}</span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-cas-green text-xs font-bold">
-                    <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>NMDPRA Verified</span>
-                  </span>
-                </div>
-
-                <div className="text-xs text-cas-muted flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">
-                  <span>Licence: {supplier.nmdpraLicense}</span>
-                  <span>|</span>
-                  <span>Depot: <strong className="text-cas-slate">{supplier.primaryDepot}</strong></span>
-                  <span>|</span>
-                  <span>Dedicated Fleet: {supplier.fleetSize} Calibrated Tankers</span>
-                </div>
-
-                {/* Laboratory Specifications Badges */}
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="px-2.5 py-1 bg-slate-100 rounded border border-slate-200 text-slate-700">
-                    Density: <strong className="font-mono">{supplier.densitySpec}</strong>
-                  </span>
-                  <span className="px-2.5 py-1 bg-slate-100 rounded border border-slate-200 text-slate-700">
-                    Flash Point: <strong className="font-mono">{supplier.flashPoint}</strong>
-                  </span>
-                  <span className="px-2.5 py-1 bg-amber-50 rounded border border-amber-200 text-cas-amberDark font-semibold">
-                    Depot Turnaround: {supplier.leadTimeHours}
-                  </span>
-                </div>
-              </div>
-
-              {/* Price & Allocation Action Box */}
-              <div className="flex flex-row lg:flex-col sm:items-end justify-between lg:justify-center border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100">
-                <div className="text-left lg:text-right">
-                  <div className="text-xs text-cas-muted font-bold uppercase tracking-wider">Spot Ex-Depot</div>
-                  <div className="text-2xl sm:text-3xl font-extrabold font-mono text-cas-slate">
-                    ₦{supplier.pricePerLitre}
-                    <span className="text-sm font-normal text-cas-muted">/L</span>
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="w-8 h-8 text-cas-amber animate-spin" />
+            <span className="ml-2 text-cas-slate font-bold">Loading marketers...</span>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredSuppliers.map((supplier) => (
+              <div
+                key={supplier.id}
+                className="p-5 sm:p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-cas-amber transition-all shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"
+              >
+                {/* Marketer Credentials */}
+                <div className="max-w-xl">
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <span className="font-extrabold text-lg text-cas-slate">{supplier.companyName}</span>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-cas-green text-xs font-bold">
+                      <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>NMDPRA Verified</span>
+                    </span>
                   </div>
-                  <div className="text-xs text-cas-muted mt-0.5">
-                    MOQ: {supplier.minOrderVolume.toLocaleString()} Litres
+
+                  <div className="text-xs text-cas-muted flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">
+                    <span>Licence: {supplier.nmdpraLicense}</span>
+                    <span>|</span>
+                    <span>Depot: <strong className="text-cas-slate">{supplier.primaryDepot}</strong></span>
+                    <span>|</span>
+                    <span>Dedicated Fleet: {supplier.fleetSize} Calibrated Tankers</span>
+                  </div>
+
+                  {/* Laboratory Specifications Badges */}
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="px-2.5 py-1 bg-slate-100 rounded border border-slate-200 text-slate-700">
+                      Density: <strong className="font-mono">{supplier.densitySpec}</strong>
+                    </span>
+                    <span className="px-2.5 py-1 bg-slate-100 rounded border border-slate-200 text-slate-700">
+                      Flash Point: <strong className="font-mono">{supplier.flashPoint}</strong>
+                    </span>
+                    <span className="px-2.5 py-1 bg-amber-50 rounded border border-amber-200 text-cas-amberDark font-semibold">
+                      Depot Turnaround: {supplier.leadTimeHours}
+                    </span>
                   </div>
                 </div>
 
-                <div className="mt-0 lg:mt-3">
-                  <button
-                    type="button"
-                    onClick={() => onSelectSupplierForEscrow(supplier)}
-                    className="px-5 py-3 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg transition-all flex items-center gap-1.5 shadow"
-                  >
-                    <span>Order via Escrow</span>
-                    <ChevronRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-                  </button>
+                {/* Price & Allocation Action Box */}
+                <div className="flex flex-row lg:flex-col sm:items-end justify-between lg:justify-center border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100">
+                  <div className="text-left lg:text-right">
+                    <div className="text-xs text-cas-muted font-bold uppercase tracking-wider">Spot Ex-Depot</div>
+                    <div className="text-2xl sm:text-3xl font-extrabold font-mono text-cas-slate">
+                      ₦{supplier.pricePerLitre}
+                      <span className="text-sm font-normal text-cas-muted">/L</span>
+                    </div>
+                    <div className="text-xs text-cas-muted mt-0.5">
+                      MOQ: {supplier.minOrderVolume.toLocaleString()} Litres
+                    </div>
+                  </div>
+
+                  <div className="mt-0 lg:mt-3">
+                    <button
+                      type="button"
+                      onClick={() => onSelectSupplierForEscrow(supplier)}
+                      className="px-5 py-3 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg transition-all flex items-center gap-1.5 shadow"
+                    >
+                      <span>Order via Escrow</span>
+                      <ChevronRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
       </div>
     </section>

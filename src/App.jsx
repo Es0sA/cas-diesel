@@ -11,6 +11,7 @@ import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
+import { api } from './api';
 import { 
   Building2, 
   UserCheck, 
@@ -23,6 +24,7 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  const [user, setUser] = useState(null);
   const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'login', 'supplier-portal', 'driver-cockpit'
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
   const [loginInitialRole, setLoginInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
@@ -78,6 +80,7 @@ export default function App() {
   };
 
   const handleLoginSuccess = (role) => {
+    setUser({ role });
     const normalizedRole = (role || '').toUpperCase();
     if (normalizedRole === 'SUPPLIER') {
       setCurrentView('supplier-portal');
@@ -86,6 +89,17 @@ export default function App() {
     } else {
       setCurrentView('home');
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await api.auth.logout();
+    } catch (err) {
+      console.error(err);
+    }
+    setUser(null);
+    setCurrentView('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -99,6 +113,8 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onOpenLegalModal={(modal) => setActiveLegalModal(modal)}
+        user={user}
+        onLogout={handleLogout}
       />
 
       {/* Live Depot Spot Ticker (Rendered on Home view) */}
