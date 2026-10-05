@@ -10,6 +10,7 @@ const TIMELINE_STATES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'DELIVERED'
 
 export default function OrderDetail({ orderId, onBack }) {
   const [order, setOrder] = useState(null);
+  const [viewerRole, setViewerRole] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,7 @@ export default function OrderDetail({ orderId, onBack }) {
         throw new Error('Order not found');
       }
 
+      setViewerRole(ordersRes.role || null);
       setOrder(foundOrder);
       setDocuments(Array.isArray(docsRes) ? docsRes : (docsRes.documents || []));
       setMessages(chatRes.messages || []);
@@ -51,6 +53,16 @@ export default function OrderDetail({ orderId, onBack }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+
+  const handleConfirmDelivery = async () => {
+    if (!window.confirm('Confirm that the fuel was delivered and discharged? This releases the escrow payment to the supplier.')) return;
+    try {
+      await api.orders.confirmDelivery(orderId);
+      await fetchData();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   const handleWaybill = async () => {
     try {
@@ -164,6 +176,14 @@ export default function OrderDetail({ orderId, onBack }) {
               Download Waybill (PDF)
             </button>
           )}
+          {viewerRole === 'BUYER' && ['IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
+            <button
+              onClick={handleConfirmDelivery}
+              className="mt-3 px-4 py-2 bg-cas-green hover:opacity-90 text-white text-sm font-bold rounded-lg transition-colors"
+            >
+              Confirm Delivery and Release Escrow
+            </button>
+          )}
           {['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
             <button 
               onClick={handleDispute}
@@ -174,6 +194,23 @@ export default function OrderDetail({ orderId, onBack }) {
           )}
         </div>
       </div>
+
+      {order.lastLatitude != null && ['IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-8 shadow-sm flex items-center justify-between gap-3 text-sm">
+          <div>
+            <span className="font-bold text-cas-slate block">Truck location</span>
+            <span className="text-cas-muted">Last updated {new Date(order.lastLocationAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+          </div>
+          <a
+            href={`https://maps.google.com/?q=${order.lastLatitude},${order.lastLongitude}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-cas-slate text-white text-xs font-bold rounded-lg"
+          >
+            View on map
+          </a>
+        </div>
+      )}
 
       <ReviewForm order={order} onSubmitted={fetchData} />
 
