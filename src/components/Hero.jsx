@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, MapPin, CheckCircle2, Lock, ArrowRight, Truck, Activity, ExternalLink } from 'lucide-react';
 
-export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
+export default function Hero({ onExploreMarketplace }) {
   return (
     <section className="bg-white py-8 sm:py-14 md:py-16 border-b border-cas-border">
       <div className="max-w-7xl mx-auto px-3 sm:px-8">
@@ -36,17 +36,8 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-8">
               <button
                 type="button"
-                onClick={onExploreSimulator}
-                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-cas-slate hover:bg-black text-white font-bold text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 border-2 border-transparent hover:border-cas-amber"
-              >
-                <span>Test the Escrow Simulator</span>
-                <ArrowRight className="w-4 h-4 text-amber-400" aria-hidden="true" />
-              </button>
-
-              <button
-                type="button"
                 onClick={onExploreMarketplace}
-                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-white hover:bg-slate-50 text-cas-slate font-bold text-sm sm:text-base rounded-lg border-2 border-cas-slate transition-all flex items-center justify-center gap-2"
+                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-cas-slate hover:bg-black text-white font-bold text-sm sm:text-base rounded-lg border-2 border-transparent hover:border-cas-amber transition-all flex items-center justify-center gap-2"
               >
                 <span>Compare Depot Suppliers</span>
               </button>
@@ -56,7 +47,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-600">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
-                <span>Stanbic Nominees Escrow Custody</span>
+                <span>Escrow Payment Protection</span>
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
@@ -126,7 +117,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                     <span className="font-mono text-white text-sm">₦40,425,000</span>
                   </div>
                   <p className="text-xs text-emerald-200/80 leading-snug">
-                    Funds are secured by Stanbic Nominees. Payment release is physically impossible until the tanker enters your 100-meter gate geofence.
+                    Funds are held in escrow. Payment release is physically impossible until the tanker enters your 100-meter gate geofence.
                   </p>
                 </div>
 
@@ -139,13 +130,6 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator }) {
                       <div className="text-xs text-slate-400">Route Locked: Non-Cancellable by Buyer</div>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={onExploreSimulator}
-                    className="text-xs font-bold text-amber-400 hover:text-white underline underline-offset-2 shrink-0"
-                  >
-                    View Radar
-                  </button>
                 </div>
 
               </div>

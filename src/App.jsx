@@ -4,7 +4,6 @@ import { api } from './api';
 import Header from './components/Header';
 import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
-import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
@@ -44,10 +43,6 @@ function HomePage({ user, handleOpenRegistration }) {
         onExploreMarketplace={() => {
           const rates = document.getElementById('depot-rates') || document.getElementById('marketplace');
           if (rates) rates.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onExploreSimulator={() => {
-          const sim = document.getElementById('escrow-simulator');
-          if (sim) sim.scrollIntoView({ behavior: 'smooth' });
         }}
         onOpenRegister={() => handleOpenRegistration('buyer')}
       />
@@ -169,7 +164,6 @@ function HomePage({ user, handleOpenRegistration }) {
         </div>
       </section>
 
-      <EscrowTerminal />
         </>
       )}
 
