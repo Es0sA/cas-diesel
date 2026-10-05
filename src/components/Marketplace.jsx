@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
-import { SUPPLIERS, DEPOT_PRICES } from '../data/depots';
+import { DEPOT_PRICES } from '../data/depots';
+import { normalizeSuppliers } from '../lib/suppliers';
+import { StarRow } from './ReviewForm';
 import { Search, Filter, ShieldCheck, CheckCircle2, Truck, ArrowUpDown, ChevronRight, Loader2 } from 'lucide-react';
 
 export default function Marketplace({ onSelectSupplierForEscrow }) {
   const [selectedDepotFilter, setSelectedDepotFilter] = useState('all');
   const [sortBy, setSortBy] = useState('price-asc');
   const [searchQuery, setSearchQuery] = useState('');
-  const [suppliers, setSuppliers] = useState(SUPPLIERS);
+  const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,9 +17,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
     api.companies.listSuppliers()
       .then((data) => {
         if (mounted) {
-          if (data && data.length > 0) {
-            setSuppliers(data);
-          }
+          setSuppliers(normalizeSuppliers(data));
           setLoading(false);
         }
       })
@@ -39,7 +39,8 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
     if (sortBy === 'price-asc') return a.pricePerLitre - b.pricePerLitre;
     if (sortBy === 'price-desc') return b.pricePerLitre - a.pricePerLitre;
     if (sortBy === 'volume-asc') return a.minOrderVolume - b.minOrderVolume;
-    if (sortBy === 'trips-desc') return b.verifiedTrips - a.verifiedTrips;
+    if (sortBy === 'trips-desc') return b.deliveredOrders - a.deliveredOrders;
+    if (sortBy === 'rating-desc') return (b.ratingAverage ?? -1) - (a.ratingAverage ?? -1);
     return 0;
   });
 
@@ -161,6 +162,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
               <option value="price-desc">Price (Highest first)</option>
               <option value="volume-asc">Minimum Volume (Lowest)</option>
               <option value="trips-desc">Verified Deliveries (Highest)</option>
+              <option value="rating-desc">Rating (Highest)</option>
             </select>
           </div>
         </div>
@@ -173,6 +175,9 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
           </div>
         ) : (
           <div className="space-y-4">
+            {filteredSuppliers.length === 0 && (
+              <p className="py-10 text-center text-sm text-cas-muted">No registered suppliers match your search yet.</p>
+            )}
             {filteredSuppliers.map((supplier) => (
               <div
                 key={supplier.id}
@@ -182,10 +187,20 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
                 <div className="max-w-xl">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
                     <span className="font-extrabold text-lg text-cas-slate">{supplier.companyName}</span>
+                    {supplier.isVerified && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-cas-green text-xs font-bold">
                       <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>NMDPRA Verified</span>
                     </span>
+                  )}
+                  {supplier.reviewCount > 0 ? (
+                    <span className="inline-flex items-center gap-1 text-xs text-cas-muted">
+                      <StarRow value={supplier.ratingAverage} size="w-3.5 h-3.5" />
+                      <strong className="text-cas-slate">{supplier.ratingAverage}</strong> ({supplier.reviewCount})
+                    </span>
+                  ) : (
+                    <span className="text-xs text-cas-muted">No reviews yet</span>
+                  )}
                   </div>
 
                   <div className="text-xs text-cas-muted flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">

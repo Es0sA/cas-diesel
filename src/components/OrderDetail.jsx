@@ -4,6 +4,7 @@ import {
   Clock, Truck, MapPin, CheckCircle, Package
 } from 'lucide-react';
 import { api } from '../api';
+import ReviewForm from './ReviewForm';
 
 const TIMELINE_STATES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'DELIVERED'];
 
@@ -27,7 +28,7 @@ export default function OrderDetail({ orderId, onBack }) {
         api.chat.getMessages(orderId).catch(() => ({ messages: [] }))
       ]);
 
-      const foundOrder = ordersRes.find(o => o.id === orderId);
+      const foundOrder = (ordersRes.orders || []).find(o => o.id === orderId);
       if (!foundOrder) {
         throw new Error('Order not found');
       }
@@ -122,7 +123,7 @@ export default function OrderDetail({ orderId, onBack }) {
         </div>
         <div className="text-left md:text-right flex flex-col items-start md:items-end">
           <p className="text-sm text-cas-muted">Total Escrow Amount</p>
-          <p className="text-3xl font-extrabold text-cas-slate">₦{(order.totalAmount || 0).toLocaleString()}</p>
+          <p className="text-3xl font-extrabold text-cas-slate">₦{(order.totalEscrowAmount ?? order.totalAmount ?? 0).toLocaleString()}</p>
           {['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
             <button 
               onClick={handleDispute}
@@ -133,6 +134,8 @@ export default function OrderDetail({ orderId, onBack }) {
           )}
         </div>
       </div>
+
+      <ReviewForm order={order} onSubmitted={fetchData} />
 
       {/* Timeline */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 mb-8 shadow-sm">
