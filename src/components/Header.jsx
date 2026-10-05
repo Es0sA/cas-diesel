@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn, LogOut, Settings } from 'lucide-react';
+import { ShieldCheck, UserPlus, Menu, X, ArrowRight, ExternalLink, LogIn, LogOut, Settings } from 'lucide-react';
 
 export default function Header({ 
   currentView, 
@@ -22,35 +22,6 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-cas-border shadow-sm">
-      {/* Top Regulatory & Operations Phone Bar */}
-      <div className="bg-cas-slate text-white text-xs sm:text-xs py-1.5 sm:py-2 px-3 sm:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 sm:gap-2 truncate">
-            <span className="inline-block w-2 h-2 rounded-full bg-cas-green animate-pulse shrink-0" aria-hidden="true"></span>
-            <span className="font-medium text-slate-300 truncate hidden min-[400px]:inline">NMDPRA Regulated Trading Hub</span>
-            <span className="text-slate-400 hidden sm:inline">|</span>
-            <span className="text-slate-400 hidden sm:inline">CAS Holdings Nigeria</span>
-          </div>
-          <div className="flex items-center gap-3 text-slate-300 shrink-0">
-            <a 
-              href="tel:+23418880227" 
-              className="flex items-center gap-1 hover:text-white transition-colors"
-              aria-label="Call CAS Energy Operations Desk"
-            >
-              <PhoneCall className="w-3 h-3 text-cas-amber" aria-hidden="true" />
-              <span className="hidden xs:inline">Ops Desk:</span>
-              <span className="font-mono text-white text-xs">+234 (01) 888-0227</span>
-            </a>
-            <button 
-              type="button"
-              onClick={() => handleModalClick('terms')} 
-              className="hidden sm:inline hover:text-white underline underline-offset-2 text-slate-400"
-            >
-              Escrow Terms
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-3 sm:px-8 py-2.5 sm:py-3.5">
@@ -178,14 +149,6 @@ export default function Header({
 
           {/* Mobile Right Controls: Quick Call & Hamburger Menu */}
           <div className="flex items-center gap-2 md:hidden">
-            <a
-              href="tel:+23418880227"
-              className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-cas-slate border border-slate-200"
-              aria-label="Call Dispatch Operations Desk"
-            >
-              <PhoneCall className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-            </a>
-
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
