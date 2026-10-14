@@ -29,16 +29,16 @@ const ROLE_CONFIGS = {
     apiRole: 'BUYER',
     title: 'Corporate Buyer',
     shortLabel: 'Buyer',
-    tagline: 'Procurement & Plant Facilities',
+    tagline: 'Procurement and facilities',
     badge: 'Escrow Protected Payments',
     signinSubtitle: 'Sign in to access bulk spot prices, manage locked escrow accounts, and monitor gate GPS discharge radar.',
     registerSubtitle: 'Register your corporate facility, set up escrow-protected payments, and pin your facility discharge gate.',
-    emailLabel: 'Corporate Procurement Email',
+    emailLabel: 'Work email',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-blue',
     accentBg: 'bg-sky-50 text-cas-blue border-sky-200',
     destination: '/',
-    destinationLabel: 'Marketplace & Discharge Gate Radar',
+    destinationLabel: 'RFQs and orders',
     featureTitle: '100% Escrow Custody Protection',
     signinFeatures: [
       'Funds remain locked in virtual escrow until tanker enters 100-meter gate radius.',
@@ -55,11 +55,11 @@ const ROLE_CONFIGS = {
     apiRole: 'SUPPLIER',
     title: 'Licensed Marketer',
     shortLabel: 'Marketer',
-    tagline: 'Depot Terminals & Marketer Pricing Desk',
+    tagline: 'Depots and pricing desk',
     badge: 'Marketer Portal',
     signinSubtitle: 'Sign in to broadcast daily spot prices, review verified buyer orders, and dispatch tanker fleets.',
     registerSubtitle: 'Register your downstream marketing entity with NMDPRA credentials and start receiving verified escrow orders.',
-    emailLabel: 'Marketer Terminal Email',
+    emailLabel: 'Work email',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-amberDark',
     accentBg: 'bg-amber-50 text-cas-amberDark border-amber-200',
@@ -86,7 +86,7 @@ const ROLE_CONFIGS = {
     badge: 'Independent Logistics Network',
     signinSubtitle: 'Sign in to view assigned tanker dispatches, digital waypoint seals, and one-tap discharge gate GPS routing.',
     registerSubtitle: 'Register as an independent tanker driver to receive verified dispatch manifests and turn-by-turn routing.',
-    emailLabel: 'Driver Email or Phone ID',
+    emailLabel: 'Email',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-green',
     accentBg: 'bg-emerald-50 text-cas-green border-emerald-200',
@@ -217,7 +217,7 @@ export default function LoginPage({
     setSuccessNotice('');
 
     if (!email.trim()) {
-      setErrorMessage('Please enter your email or terminal ID.');
+      setErrorMessage('Please enter your email.');
       return;
     }
 
@@ -236,7 +236,7 @@ export default function LoginPage({
       });
 
       const serverRole = response.role ? response.role.toUpperCase() : activeConfig.apiRole;
-      setSuccessNotice(`Authentication successful. Redirecting to ${serverRole.toLowerCase()} terminal...`);
+      setSuccessNotice(`Authentication successful. Redirecting to your ${serverRole.toLowerCase()} account...`);
 
       setTimeout(() => {
         if (onLoginSuccess) {
@@ -247,7 +247,7 @@ export default function LoginPage({
     } catch (err) {
       const message = err.message || 'Authentication failed. Please verify credentials.';
       if (message.includes('Failed to fetch') || message.includes('NetworkError')) {
-        setErrorMessage('Cannot reach CAS Energy authentication servers. If testing offline, you can use quick demo access.');
+        setErrorMessage('Cannot reach the CAS Diesel servers. Check your connection and try again.');
       } else {
         setErrorMessage(message);
       }
@@ -388,8 +388,11 @@ export default function LoginPage({
   };
 
   return (
-    <div className="min-h-screen bg-slate-100/80 py-6 sm:py-10 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12 transition-all">
+    <div className="relative min-h-screen bg-slate-950 py-6 sm:py-10 px-4 sm:px-6 lg:px-8 flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.07] pointer-events-none" aria-hidden="true"
+        style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '56px 56px' }} />
+      <div className="absolute -top-40 -right-40 w-[34rem] h-[34rem] rounded-full bg-amber-600/20 blur-3xl pointer-events-none" aria-hidden="true" />
+      <div className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-white/10 overflow-hidden grid grid-cols-1 lg:grid-cols-12 transition-all">
         
         {/* Left Column: Unified Auth Terminal (Sign In & Register) */}
         <div className="p-6 sm:p-10 lg:p-12 lg:col-span-7 flex flex-col justify-between lg:max-h-[92vh] lg:overflow-y-auto">
@@ -402,7 +405,7 @@ export default function LoginPage({
                 className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-                <span>Return to Portal</span>
+                <span>Back to home</span>
               </button>
             </div>
 
@@ -413,11 +416,11 @@ export default function LoginPage({
                   CAS
                 </div>
                 <span className="font-extrabold text-xl text-cas-slate tracking-tight">
-                  CAS Energy Terminal
+                  CAS Diesel
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight">
-                {authMode === 'signin' ? 'Sign In to Terminal' : 'Create Terminal Account'}
+                {authMode === 'signin' ? 'Sign in' : 'Create your account'}
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
                 {authMode === 'signin' ? activeConfig.signinSubtitle : activeConfig.registerSubtitle}
@@ -585,7 +588,7 @@ export default function LoginPage({
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter terminal password"
+                      placeholder="Enter your password"
                       className="w-full pl-10 pr-11 py-3 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-500 focus:outline-none transition-all"
                     />
                     <button
@@ -620,7 +623,7 @@ export default function LoginPage({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 py-3.5 px-4 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full mt-2 py-3.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-extrabold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -968,7 +971,7 @@ export default function LoginPage({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-3 py-3.5 px-4 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full mt-3 py-3.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-extrabold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -993,7 +996,7 @@ export default function LoginPage({
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <span className="text-slate-600">
                 {authMode === 'signin' 
-                  ? 'Need a new corporate terminal profile?' 
+                  ? 'New to CAS Diesel?' 
                   : 'Already hold a verified account?'}
               </span>
               <button
@@ -1014,7 +1017,7 @@ export default function LoginPage({
         </div>
 
         {/* Right Column: Dynamic Visual Industrial Showcase */}
-        <div className="relative p-8 sm:p-10 lg:p-12 lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white flex flex-col justify-between overflow-hidden">
+        <div className="relative p-8 sm:p-10 lg:p-12 lg:col-span-5 bg-slate-900 text-white border-l border-white/10 flex flex-col justify-between overflow-hidden">
           
           {/* Decorative Glow */}
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-cas-amber/10 blur-3xl pointer-events-none"></div>
@@ -1024,14 +1027,14 @@ export default function LoginPage({
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-slate-300 text-xs font-semibold mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Downstream Bulk Fuel Network</span>
+              <span>Bulk diesel network</span>
             </div>
 
             <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white mb-2">
-              Downstream Escrow Logistics
+              Source, pay and verify in one place
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Every litre of AGO is certified, tracked, and secured from depot gantry to discharge gate.
+              Every order is verified, tracked and settled from depot gantry to discharge gate.
             </p>
           </div>
 
@@ -1056,6 +1059,15 @@ export default function LoginPage({
               ))}
             </ul>
           </div>
+
+          <ol className="relative z-10 mb-6 space-y-2.5 text-xs text-slate-300" aria-label="How an order flows">
+            {['Post an RFQ and compare quotes', 'Fund escrow', 'Track the truck to your gate', 'Verify the delivery and settle'].map((t, i) => (
+              <li key={t} className="flex items-center gap-3">
+                <span className="w-6 h-6 rounded-full bg-amber-500 text-slate-950 text-[11px] font-extrabold flex items-center justify-center shrink-0">{i + 1}</span>
+                <span className="font-semibold">{t}</span>
+              </li>
+            ))}
+          </ol>
 
           {CONTACT.phone && (
           <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
@@ -1083,7 +1095,7 @@ export default function LoginPage({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <HelpCircle className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
-                <h3 className="font-bold text-base text-cas-slate">Terminal Access Assistance</h3>
+                <h3 className="font-bold text-base text-cas-slate">Access assistance</h3>
               </div>
               <button
                 type="button"
@@ -1096,7 +1108,7 @@ export default function LoginPage({
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed mb-4">
-              Password reset is not self-service yet. {CONTACT.email ? 'Email us from your registered address and we will help you regain access.' : 'Please contact the CAS Energy team to regain access.'}
+              Password reset is not self-service yet. {CONTACT.email ? 'Email us from your registered address and we will help you regain access.' : 'Please contact the CAS Diesel team to regain access.'}
             </p>
             {CONTACT.email && (
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-5 text-xs flex justify-between">
