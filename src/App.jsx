@@ -15,6 +15,7 @@ import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
+import Rfqs from './components/Rfqs';
 
 function HomePage({ user, handleOpenRegistration }) {
   const [checkoutSupplier, setCheckoutSupplier] = useState(null);
@@ -122,6 +123,8 @@ export default function App() {
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<SupplierPortal />} />
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
+          <Route path="/rfqs" element={<Rfqs user={user} />} />
+          <Route path="/rfqs/:id" element={<Rfqs user={user} />} />
           <Route path="/orders/:id" element={<OrderDetail />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />

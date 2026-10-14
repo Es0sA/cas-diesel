@@ -4,7 +4,7 @@ import { api } from '../api';
 import KycUpload from './KycUpload';
 import { DEPOTS } from '../data/depots';
 
-const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED'];
+const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 
 export default function SupplierPortal({ onViewOrder }) {
   const viewOrder = (id) => onViewOrder && onViewOrder(id);
