@@ -354,21 +354,32 @@ export default function OrderDetail() {
               </div>
             ) : (
               <ul className="space-y-3">
-                {documents.map((doc, i) => (
-                  <li key={i} className="flex items-center justify-between p-3 border border-slate-100 rounded-lg hover:border-slate-300 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-cas-blueLight rounded text-cas-blue">
-                        <FileText className="w-4 h-4" />
-                      </div>
-                      <span className="text-sm font-medium text-cas-slate">{doc.documentType}</span>
-                    </div>
-                    {doc.verified ? (
-                      <CheckCircle className="w-4 h-4 text-cas-green" />
-                    ) : (
-                      <span className="text-xs bg-slate-100 text-cas-muted px-2 py-1 rounded">On file</span>
-                    )}
-                  </li>
-                ))}
+                {documents.map((doc, i) => {
+                  const canOpen = !(doc.source === 'KYC' && !['DRIVER', 'ADMIN'].includes(viewerRole));
+                  const open = async () => {
+                    try {
+                      const { url } = await api.compliance.documentUrl(orderId, doc.id);
+                      window.open(url, '_blank', 'noopener,noreferrer');
+                    } catch (err) {
+                      alert(err.message);
+                    }
+                  };
+                  const Row = canOpen ? 'button' : 'div';
+                  return (
+                    <li key={doc.id || i}>
+                      <Row {...(canOpen ? { type: 'button', onClick: open } : {})} className={`w-full text-left flex items-center justify-between gap-2 p-3 border border-slate-100 rounded-lg transition-colors ${canOpen ? 'hover:border-slate-300 cursor-pointer' : ''}`}>
+                        <span className="flex items-center gap-3 min-w-0">
+                          <span className="p-2 bg-cas-blueLight rounded text-cas-blue shrink-0"><FileText className="w-4 h-4" /></span>
+                          <span className="min-w-0">
+                            <span className="block text-sm font-medium text-cas-slate break-words">{doc.documentType.replace(/_/g, ' ')}</span>
+                            {doc.fileName && <span className="block text-xs text-cas-muted truncate">{doc.fileName}</span>}
+                          </span>
+                        </span>
+                        <span className="text-xs bg-slate-100 text-cas-muted px-2 py-1 rounded shrink-0">{canOpen ? 'Open' : 'On file'}</span>
+                      </Row>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

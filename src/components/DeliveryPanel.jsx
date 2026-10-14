@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { CheckCircle2, Circle, ShieldCheck, Scale, Lock, Timer } from 'lucide-react';
+import { CheckCircle2, Circle, ShieldCheck, Scale, Lock, Timer, Camera } from 'lucide-react';
 import { api } from '../api';
 
 const DOC_LABELS = {
@@ -56,8 +56,6 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
   const [msg, setMsg] = useState(null);
   const [contesting, setContesting] = useState(false);
   const [reason, setReason] = useState('');
-  const [docType, setDocType] = useState('');
-  const [docUrl, setDocUrl] = useState('');
 
   const funded = order.status !== 'DRAFT';
   const load = useCallback(async () => {
@@ -110,11 +108,6 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       : [];
   const missingMine = checklist ? checklist.missing.filter((t) => myUploadTypes.includes(t)) : [];
 
-  const uploadDoc = (e) => {
-    e.preventDefault();
-    run(() => api.compliance.upload(order.id, { documentType: docType, fileUrl: docUrl }).then(() => { setDocType(''); setDocUrl(''); }), 'Document added.');
-  };
-
   if (!funded) return null;
 
   const inField = ['IN_TRANSIT', 'ARRIVED'].includes(order.status);
@@ -159,18 +152,19 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
           {!checklist.complete && !finished && <p className="text-xs text-cas-muted mt-2">Offloading is cleared once all seven are on file. The waybill, the batch certificate, the driver licence and the calibration chart attach themselves. The supplier adds the invoice, the seal record and the loading ticket for each load.</p>}
 
           {missingMine.length > 0 && inField && (
-            <form onSubmit={uploadDoc} className="mt-4 grid sm:grid-cols-[1fr_2fr_auto] gap-2 items-end">
-              <Field label="Document">
-                <select required value={docType} onChange={(e) => setDocType(e.target.value)} className={inputCls}>
-                  <option value="">Choose</option>
-                  {missingMine.map((t) => <option key={t} value={t}>{DOC_LABELS[t]}</option>)}
-                </select>
-              </Field>
-              <Field label="HTTPS link to the file">
-                <input required type="url" placeholder="https://" value={docUrl} onChange={(e) => setDocUrl(e.target.value)} className={inputCls} />
-              </Field>
-              <button disabled={busy} className="px-4 py-2 bg-cas-slate text-white text-sm font-bold rounded-lg disabled:opacity-50">Add</button>
-            </form>
+            <div className="mt-4 rounded-xl border border-slate-200 p-4">
+              <h4 className="text-sm font-bold text-cas-slate mb-1">Add a document</h4>
+              <p className="text-xs text-cas-muted mb-3">Take a photo or pick a file. PDF, JPG or PNG, up to 5 MB.</p>
+              <div className="flex flex-wrap gap-2">
+                {missingMine.map((t) => (
+                  <label key={t} className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold border border-slate-300 text-cas-slate cursor-pointer hover:border-cas-amber ${busy ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <Camera className="w-4 h-4" aria-hidden="true" /> {DOC_LABELS[t]}
+                    <input type="file" accept="image/jpeg,image/png,application/pdf" className="sr-only" disabled={busy}
+                      onChange={(e) => { const f = e.target.files[0]; e.target.value = ''; if (f) run(() => api.compliance.uploadFile(order.id, t, f), `${DOC_LABELS[t]} added.`); }} />
+                  </label>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}

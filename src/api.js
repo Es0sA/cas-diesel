@@ -148,6 +148,15 @@ export const api = {
   compliance: {
     upload: (orderId, data) => request(`/compliance/upload/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),
     getDocuments: (orderId) => request(`/compliance/${orderId}`),
+    uploadFile: async (orderId, documentType, file) => {
+      const form = new FormData();
+      form.append('documentType', documentType);
+      form.append('file', file);
+      const res = await fetch(`${API_URL}/compliance/upload-file/${orderId}`, { method: 'POST', body: form, credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data;
+    },
     documentUrl: (orderId, docId) => request(`/compliance/${orderId}/${docId}/url`),
   },
 };
