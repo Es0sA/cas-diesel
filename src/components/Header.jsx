@@ -16,7 +16,9 @@ const ROLE_LINKS = {
 };
 const PUBLIC_LINKS = [
   { label: 'How it works', hash: 'how-it-works' },
-  { label: 'Marketers', hash: 'marketplace' },
+  { label: 'For buyers', hash: 'buyers' },
+  { label: 'For marketers', hash: 'for-marketers' },
+  { label: 'FAQ', hash: 'faq' },
 ];
 
 export default function Header({ user, onLogout, onOpenLegalModal }) {
@@ -83,7 +85,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
             <span className="font-extrabold text-sm tracking-wider text-cas-amber">CAS</span>
           </span>
           <span className="font-extrabold text-xl tracking-tight text-cas-slate group-hover:text-cas-amberDark transition-colors">
-            CAS Energy
+            CAS Diesel
           </span>
         </Link>
 
@@ -100,7 +102,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                 Sign in
               </Link>
               <Link to="/register" className="px-4 py-2 rounded-lg text-sm font-bold bg-cas-slate hover:bg-black text-white transition-colors">
-                Get started
+                Get Diesel
               </Link>
             </>
           ) : (
@@ -166,7 +168,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                   Sign in
                 </Link>
                 <Link to="/register" onClick={() => setMobileOpen(false)} className="text-center p-3 rounded-xl text-sm font-bold bg-cas-slate text-white">
-                  Get started
+                  Get Diesel
                 </Link>
               </div>
             ) : (
@@ -187,7 +189,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
             )}
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
-            {[['terms', 'Escrow Terms'], ['privacy', 'NDPR Privacy'], ['refund', 'Refunds & Demurrage'], ['cookies', 'Cookie Policy']].map(([k, t]) => (
+            {[['terms', 'Terms'], ['privacy', 'Privacy'], ['refund', 'Refunds and Disputes'], ['cookies', 'Cookie Policy']].map(([k, t]) => (
               <button key={k} type="button" onClick={() => { setMobileOpen(false); onOpenLegalModal(k); }} className="underline underline-offset-2 hover:text-black">
                 {t}
               </button>

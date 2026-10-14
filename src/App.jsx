@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { api } from './api';
 import Header from './components/Header';
-import Hero from './components/Hero';
+import Landing from './components/Landing';
 import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
@@ -15,15 +15,6 @@ import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
-import { 
-  Building2, 
-  UserCheck, 
-  Truck, 
-  ShieldCheck, 
-  Lock, 
-  ArrowRight, 
-  CheckCircle2
-} from 'lucide-react';
 
 function HomePage({ user, handleOpenRegistration }) {
   const [checkoutSupplier, setCheckoutSupplier] = useState(null);
@@ -33,137 +24,15 @@ function HomePage({ user, handleOpenRegistration }) {
     setCheckoutSupplier(null);
     navigate(`/orders/${orderId}`);
   };
+  const marketplaceEl = (
+    <Marketplace
+      onSelectSupplierForEscrow={(supplier) => setCheckoutSupplier(supplier)}
+    />
+  );
   return (
     <>
       {user && <h1 className="sr-only">Fuel marketplace</h1>}
-      {!user && (
-        <>
-          <Hero 
-        onExploreMarketplace={() => {
-          const rates = document.getElementById('depot-rates') || document.getElementById('marketplace');
-          if (rates) rates.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onOpenRegister={() => handleOpenRegistration('buyer')}
-      />
-
-
-      <section id="how-it-works" className="bg-white py-14 sm:py-20 border-b border-cas-border scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
-              <ShieldCheck className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-              <span>How CAS Energy Operates</span>
-            </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-              Licensed Marketers Meet The Companies That Need Diesel
-            </h2>
-            <p className="text-base sm:text-lg text-cas-muted mt-2">
-              Stop chasing quotes and phone calls. Browse verified marketers, compare prices by depot and order in minutes. Your payment stays in escrow until the diesel is delivered.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col justify-between hover:border-cas-blue transition-colors">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-sky-100 text-cas-blue flex items-center justify-center mb-6">
-                  <Building2 className="w-6 h-6" aria-hidden="true" />
-                </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Corporate Buyers</h3>
-                <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                  Procurement managers choose suppliers by price and depot location. Funds are held in escrow. During registration, you map your exact GPS discharge gate so trucks never get lost.
-                </p>
-              </div>
-
-              <div>
-                <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                    <span>Compare prices by depot</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleOpenRegistration('buyer')}
-                  className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Register As A Buyer</span>
-                  <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col justify-between hover:border-cas-amber transition-colors">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-amber-100 text-cas-amberDark flex items-center justify-center mb-6">
-                  <UserCheck className="w-6 h-6" aria-hidden="true" />
-                </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Licensed Marketers</h3>
-                <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                  Publish your own spot price per litre and available volumes. Once your truck departs the gantry, the order is non-cancellable, protecting your capital.
-                </p>
-              </div>
-
-              <div>
-                <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                    <span>Guaranteed escrow before truck departs</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleOpenRegistration('supplier')}
-                  className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Register As A Marketer</span>
-                  <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col justify-between hover:border-cas-green transition-colors">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-100 text-cas-green flex items-center justify-center mb-6">
-                  <Truck className="w-6 h-6" aria-hidden="true" />
-                </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Fleet Tanker Drivers</h3>
-                <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                  Register under your marketer. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
-                </p>
-              </div>
-
-              <div>
-                <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                    <span>One-tap GPS navigation to discharge gate</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleOpenRegistration('driver')}
-                  className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Register As A Driver</span>
-                  <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-        </>
-      )}
-
-      <Marketplace 
-        onSelectSupplierForEscrow={(supplier) => setCheckoutSupplier(supplier)}
-      />
+      {user ? marketplaceEl : <Landing onRegister={handleOpenRegistration} marketplace={marketplaceEl} />}
 
       {checkoutSupplier && (
         <OrderCheckoutModal

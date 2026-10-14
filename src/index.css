@@ -51,3 +51,19 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }
+
+/* Order flow marker on the landing hero: moves down the line to show progression */
+@keyframes cas-flow {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(15rem); opacity: 0; }
+}
+.cas-flow-dot { animation: cas-flow 4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cas-flow-dot { animation: none; opacity: 0; }
+}
+
+@keyframes cas-pulse { 0%,100% { opacity: .15; transform: scale(1); } 50% { opacity: .5; transform: scale(1.5); } }
+.cas-pulse { transform-box: fill-box; transform-origin: center; animation: cas-pulse 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .cas-pulse { animation: none; } }

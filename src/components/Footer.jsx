@@ -19,10 +19,10 @@ export default function Footer({ onOpenLegalModal }) {
               <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center border-2 border-cas-amber">
                 <span className="font-extrabold text-lg text-cas-amber">CAS</span>
               </div>
-              <span className="font-extrabold text-xl text-white tracking-tight">CAS Energy</span>
+              <span className="font-extrabold text-xl text-white tracking-tight">CAS Diesel</span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed max-w-md">
-              A wholesale diesel marketplace. Payment is held in escrow and released when delivery is confirmed at your gate.
+              Bulk diesel for businesses. Compare verified marketers, pay into escrow and settle on the quantity you receive.
             </p>
           </div>
 
@@ -77,7 +77,7 @@ export default function Footer({ onOpenLegalModal }) {
           Estimated arrival times depend on depot queues and road conditions. Escrow secures your funds and verifies delivery. It does not guarantee transit speed.
         </p>
 
-        <div className="mt-6 text-xs text-slate-400">&copy; {new Date().getFullYear()} CAS Energy. All rights reserved.</div>
+        <div className="mt-6 text-xs text-slate-400">&copy; {new Date().getFullYear()} CAS Diesel. All rights reserved.</div>
       </div>
     </footer>
   );
