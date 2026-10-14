@@ -81,8 +81,10 @@ export default function SupplierPortal({ onViewOrder }) {
     }
     try {
       setDispatchingId(orderId);
-      await api.orders.dispatch(orderId, { driverId });
+      const res = await api.orders.dispatch(orderId, { driverId });
       await loadOrders();
+      const gaps = res.standingDocs?.missing || [];
+      if (gaps.length) alert(`Dispatched, but the driver has no approved, unexpired ${gaps.map((g) => g.type === 'DRIVER_ID' ? 'driver licence' : 'truck calibration chart').join(' or ')} on file. Ask the driver to upload it in their profile, or add the document on the order page, or the buyer cannot clear offloading.`);
     } catch (err) {
       alert(err.message);
     } finally {

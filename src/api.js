@@ -134,9 +134,10 @@ export const api = {
   kyc: {
     mine: () => request('/kyc/mine'),
     status: () => request('/kyc/status'),
-    upload: async (documentType, file) => {
+    upload: async (documentType, file, expiresAt) => {
       const form = new FormData();
       form.append('documentType', documentType);
+      if (expiresAt) form.append('expiresAt', expiresAt);
       form.append('file', file);
       const res = await fetch(`${API_URL}/kyc/upload`, { method: 'POST', body: form, credentials: 'include' });
       const data = await res.json();
@@ -147,5 +148,6 @@ export const api = {
   compliance: {
     upload: (orderId, data) => request(`/compliance/upload/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),
     getDocuments: (orderId) => request(`/compliance/${orderId}`),
+    documentUrl: (orderId, docId) => request(`/compliance/${orderId}/${docId}/url`),
   },
 };
