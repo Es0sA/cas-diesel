@@ -20,6 +20,7 @@ export default function KycUpload({ types }) {
   const [error, setError] = useState('');
   const [verified, setVerified] = useState(false);
   const [expiry, setExpiry] = useState({});
+  const [tomorrow] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
 
   const load = () => api.kyc.mine().then(setDocs).catch(() => {});
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function KycUpload({ types }) {
               {NEEDS_EXPIRY.includes(type) && (
                 <label className="shrink-0 text-xs font-bold text-cas-slate">
                   <span className="block mb-0.5">Expiry date</span>
-                  <input type="date" min={new Date(Date.now() + 86400000).toISOString().slice(0, 10)} value={expiry[type] || ''} onChange={(e) => setExpiry((x) => ({ ...x, [type]: e.target.value }))} className="border border-slate-300 rounded-lg px-2 py-1 text-xs font-normal" />
+                  <input type="date" min={tomorrow} value={expiry[type] || ''} onChange={(e) => setExpiry((x) => ({ ...x, [type]: e.target.value }))} className="border border-slate-300 rounded-lg px-2 py-1 text-xs font-normal" />
                 </label>
               )}
               <label className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-slate-300 text-cas-slate cursor-pointer hover:border-cas-amber">
