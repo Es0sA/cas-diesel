@@ -139,7 +139,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       {/* Document checklist */}
       {checklist && (
         <div className="mb-6">
-          <h3 className="text-sm font-bold text-cas-slate mb-2">Documents required before offloading</h3>
+          <h3 className="text-sm font-bold text-cas-slate mb-2">Documents on file</h3>
           <ul className="grid sm:grid-cols-2 gap-2">
             {checklist.items.map((i) => (
               <li key={i.type} className={`flex items-center gap-2 text-sm px-3 py-2 rounded-lg border ${i.present ? 'bg-cas-greenLight/50 border-green-200 text-cas-slate' : 'bg-slate-50 border-slate-200 text-cas-muted'}`}>
