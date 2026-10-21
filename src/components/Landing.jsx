@@ -57,7 +57,7 @@ const FEATURES = [
   { icon: FileText, title: 'RFQ in minutes', text: 'A prefilled AGO spec template, so you never retype the standard clauses.' },
   { icon: Zap, title: 'Instant spec check', text: 'Each quote is checked against your limits and any deviation is flagged.' },
   { icon: Repeat, title: 'Standing-rate auto-quotes', text: 'Marketers save depots, minimums and prices, then confirm quotes in one tap.' },
-  { icon: Clock, title: 'Deadlines enforced', text: 'Dispatch within 24 hours and delivery within 3 working days, tracked automatically.' },
+  { icon: Clock, title: 'Deadlines tracked', text: 'Dispatch within 24 hours and delivery within 3 working days. Missed deadlines are flagged openly, the supplier rating drops, and the buyer decides whether to request a refund.' },
   { icon: Eye, title: 'Open directory', text: 'Browse verified marketers by depot with prices and minimum orders side by side.' },
   { icon: MessageSquare, title: 'Order chat', text: 'Buyer and marketer talk on the order itself, with unread alerts.' },
   { icon: Receipt, title: 'Waybills on demand', text: 'Download a waybill for any order as a PDF.' },

@@ -56,6 +56,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
   const [msg, setMsg] = useState(null);
   const [contesting, setContesting] = useState(false);
   const [reason, setReason] = useState('');
+  const [offer, setOffer] = useState({ amount: '', note: '' });
 
   const funded = order.status !== 'DRAFT';
   const load = useCallback(async () => {
@@ -149,7 +150,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
               </li>
             ))}
           </ul>
-          {!checklist.complete && !finished && <p className="text-xs text-cas-muted mt-2">Offloading is cleared once all seven are on file. The waybill, the batch certificate, the driver licence and the calibration chart attach themselves. The supplier adds the invoice, the seal record and the loading ticket for each load.</p>}
+          {!checklist.complete && !finished && <p className="text-xs text-cas-muted mt-2">Missing documents are flagged, never blocking. The waybill carries the batch certificate, loading ticket and seal record, and doubles as the invoice for depot purchases. Delivery orders also need a delivery invoice.</p>}
 
           {missingMine.length > 0 && inField && (
             <div className="mt-4 rounded-xl border border-slate-200 p-4">
@@ -248,6 +249,29 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       )}
 
       {/* Settled, or held in dispute with measurements */}
+      {order.status === 'DISPUTED' && (viewerRole === 'BUYER' || viewerRole === 'SUPPLIER') && (
+        <div className="mb-5 p-4 rounded-xl border border-amber-200 bg-amber-50">
+          <h3 className="text-sm font-bold text-cas-slate mb-1">Negotiate a split</h3>
+          <p className="text-xs text-cas-muted mb-3">
+            Agree between yourselves how the {naira(order.totalEscrowAmount)} escrow is shared. If nothing is agreed {order.disputeOpenedAt ? <>in <strong><Countdown until={new Date(new Date(order.disputeOpenedAt).getTime() + 72 * 3600000)} /></strong></> : 'within 72 hours'}, CAS settles by its guidelines.
+          </p>
+          {order.splitProposal && (
+            <div className="mb-3 text-sm">
+              <p><strong>{order.splitProposal.byRole === viewerRole ? 'Your offer' : `Offer from the ${order.splitProposal.byRole.toLowerCase()}`}:</strong> {naira(order.splitProposal.releaseAmount)} to the supplier, {naira(order.splitProposal.refundAmount)} back to the buyer.</p>
+              {order.splitProposal.note && <p className="text-xs text-cas-muted mt-1">{order.splitProposal.note}</p>}
+              {order.splitProposal.byRole !== viewerRole && (
+                <button type="button" disabled={busy} onClick={() => run(() => api.orders.acceptSplit(order.id, order.splitProposal.releaseAmount), 'Agreement reached. Payment settled.')} className="mt-2 px-4 py-2 rounded-lg bg-cas-blue text-white text-sm font-bold disabled:opacity-50">Accept this split</button>
+              )}
+            </div>
+          )}
+          <form className="flex flex-wrap gap-2 items-end" onSubmit={(e) => { e.preventDefault(); run(() => api.orders.proposeSplit(order.id, offer.amount, offer.note), 'Offer sent.'); }}>
+            <Field label="Amount to the supplier (naira)"><input type="number" min="0" max={order.totalEscrowAmount} step="0.01" required value={offer.amount} onChange={(e) => setOffer((o) => ({ ...o, amount: e.target.value }))} className={inputCls} /></Field>
+            <Field label="Note (optional)"><input type="text" maxLength={500} value={offer.note} onChange={(e) => setOffer((o) => ({ ...o, note: e.target.value }))} className={inputCls} /></Field>
+            <button type="submit" disabled={busy} className="px-4 py-2 rounded-lg border border-cas-border bg-white text-sm font-bold disabled:opacity-50">{order.splitProposal ? 'Counter offer' : 'Send offer'}</button>
+          </form>
+        </div>
+      )}
+
       {!settling && verification && (
         <div className={`rounded-xl border p-4 ${finished ? 'border-green-200 bg-cas-greenLight/40' : 'border-rose-200 bg-rose-50'}`}>
           <h3 className="font-bold text-cas-slate">
